@@ -7,10 +7,11 @@ import {
 import Login from "./Login";
 import Signup from "./Signup";
 
-export default function test() {
+export default function Routes() {
     return (
         <Router>
             <Switch>
+
                 <Route path="/signup">
                     <Signup />
                 </Route>
@@ -18,6 +19,7 @@ export default function test() {
                 <Route path="/">
                     <Login />
                 </Route>
+
             </Switch>
         </Router>
     )
