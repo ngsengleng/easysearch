@@ -1,0 +1,27 @@
+.loginForm, .loginBox, .loginTitle {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    text-align: center;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+.loginButton {
+    padding-top: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+.error {
+    color: red;
+}
+
+label {
+    padding-bottom: 20px;
+    padding-top: 10px;
+}
+
+h3 {
+    text-decoration: underline;
+}

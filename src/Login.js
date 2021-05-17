@@ -13,28 +13,32 @@ export default function Login() {
 
     return (
 
-        <div>
-            <h1>
-                EasySearch
-            </h1>
-            <p>
-                We get the best deals anywhere
-            </p>
-            <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="loginForm">
+            <div className="loginTitle">
+                <h1>
+                    EasySearch
+                </h1>
+                <h3>
+                    We get the best deals anywhere
+                </h3>
+            </div>
+            
+            <form className="loginBox" onSubmit={handleSubmit(onSubmit)}>
 
                 <label> Username: </label>
                 <input type="text" {...register("Username", { required: true })} />
-                {errors.Username && <p className="error">this is required</p>}
+                {errors.Username && <p className="error">This is required</p>}
 
                 <label> Password: </label>
                 <input type="text" {...register("Password", { required: true })} />
-                {errors.Password && <p className="error">this is required</p>}
+                {errors.Password && <p className="error">This is required</p>}
             
-                <div>
+                <div className="loginButton">
+                    <input type="submit" value="Login" /> 
+                    <br/>
                     <Link to="/signup">
                         New user?
                     </Link>
-                    <input type="submit" value="Login" /> 
                 </div>     
             </form>
         </div>

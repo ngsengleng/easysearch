@@ -1,0 +1,14 @@
+.signupForm, .signupBox {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    text-align: center;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+.signupButton {
+    padding-top: 30px;
+    display: flex;
+    flex-direction: column;
+}
