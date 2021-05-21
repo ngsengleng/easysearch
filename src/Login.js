@@ -1,15 +1,38 @@
 import "./Login.css";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import PropTypes from "prop-types";
 
 // TODO
 // credential verification
-// route to home page
 
-export default function Login() {
+async function userLogin(credentials) {
+    return fetch('http://localhost:8080/', {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify(credentials)
+    }).then(data => data.json())
+}
+
+
+export default function Login({setToken}) {
+
+    const history = useHistory();
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const onSubmit = data => alert(JSON.stringify(data));
+    const onSubmit = async data => {
+        // replace this token with token from database to compare with 
+        // login information, if true then proceed to homepage else try again
+        // TODO
+        const token = await userLogin(data);
+        if (true) {
+           setToken(token);
+            history.push("/home"); 
+        }
+    }
+    
 
     return (
 
@@ -43,4 +66,8 @@ export default function Login() {
             </form>
         </div>
     )
+}
+
+Login.propTypes = {
+    setToken: PropTypes.func.isRequired
 }
