@@ -1,40 +1,23 @@
 import styles from "./Login.module.css";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Button, TextField } from "@material-ui/core";
+import { firebase } from "@firebase/app";
 
 // TODO
 // credential verification
 
-async function userLogin(credentials) {
-    return fetch('http://localhost:8080/', {
-        method: 'POST',
-        headers: {
-            'Content-type': 'application/json'
-        },
-        body: JSON.stringify(credentials)
-    }).then(data => data.json())
-}
-
-
 export default function Login({setToken}) {
 
     const { register, handleSubmit, formState: { errors } } = useForm();
+    const history = useHistory();
     const onSubmit = async data => {
-        // replace this token with token from database to compare with 
-        // login information, if true then proceed to homepage else try again
-        // TODO
-        const token = await userLogin(data);
-        if (true) {
-           setToken(token);
-        }
+        firebase.auth().signInWithEmailAndPassword(data.Email, data.Password).then(history.push("/"));
     }
     
-
     return (
-
         <div className={styles.Form}>
             <div className={styles.Title}>
                 <h1>
@@ -44,10 +27,9 @@ export default function Login({setToken}) {
                     We get the best deals anywhere
                 </h3>
             </div>
-            
             <form className={styles.Boxes} onSubmit={handleSubmit(onSubmit)}>
 
-                <TextField id="standard-basic" label="Email" {...register("Username", { required: true })} />
+                <TextField id="standard-basic" label="Email" {...register("Email", { required: true })} />
                 {errors.Username && <p className="error">This is required</p>}
 
 

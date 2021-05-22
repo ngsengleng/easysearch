@@ -11,9 +11,14 @@ export default function App() {
     
     // do firebase authentication
     // TODO
-    if (false) {
-        return <NoAuth />;
-    }
-    
-    return <UserAuth />;
+    return (
+        <FirebaseAuthConsumer>
+            <IfFirebaseAuthed>
+                <UserAuth />
+            </IfFirebaseAuthed>
+            <IfFirebaseUnAuthed>
+                <NoAuth />
+            </IfFirebaseUnAuthed>
+        </FirebaseAuthConsumer>
+    )
 }

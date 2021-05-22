@@ -2,7 +2,18 @@
 // TODO
 
 import React from "react";
+import { Button } from "@material-ui/core";
+import { firebase } from "@firebase/app";
 
 export default function Home() {
-    return <p> this is the homepage.</p>
+    const handleLogout = (firebase) => {
+        firebase.auth().signOut();
+      };
+    return (
+        <div>
+            <p> this is the homepage.</p>
+            <Button variant="contained" color="inherit" onClick={() => handleLogout(firebase)}>Logout</Button>
+        </div>
+    )
+    
 }

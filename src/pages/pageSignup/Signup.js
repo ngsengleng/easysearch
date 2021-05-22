@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
 import { Button, TextField } from "@material-ui/core";
 
+import { firebase } from "@firebase/app";
 // TODO
 
 export default function Signup() {
@@ -12,11 +13,13 @@ export default function Signup() {
     // password comparing variables
     const repeatPassword = useRef({});
     repeatPassword.current = watch("Password", "");
-
-    // routing after successful submission
+        
     const history = useHistory();
-    const backToLogin = () => history.push("/");
-    
+    const signUp = async data => {
+        await firebase.auth().createUserWithEmailAndPassword(data.Email, data.Password)
+        .then(history.push("/"));
+    }
+
     return (
         <div className={styles.Form}>
             <div className={styles.Title}>
@@ -27,16 +30,15 @@ export default function Signup() {
                     We get the best deals anywhere
                 </h3>
             </div>
-                
-            <form className={styles.Boxes} onSubmit={handleSubmit(backToLogin)}>
+            <form className={styles.Boxes} onSubmit={handleSubmit(signUp)}>
 
-                <TextField id="standard-basic" label="email" {...register("Username", { required: true})} />
+                <TextField id="standard-basic" label="email" {...register("Email", { required: true})} />
                 {errors.Username && <p className={styles.error}>this is required</p>}
 
-                <TextField id="standard-basic" label="password" {...register("Password", { required: true})} />
+                <TextField id="standard-basic" label="password" {...register("Password", { required: true, minLength: 6})} />
                 {errors.Password && <p className={styles.error}>this is required</p>}
 
-                <TextField id="standard-basic" label="retype password" {...register("pwdCheck", {
+                <TextField id="standard-basic" label="retype password" {...register("pwdCheck", {minLength: 6,
                 validate: value => value === repeatPassword.current})} />
                 {errors.pwdCheck && <p className={styles.error}>passwords do not match</p>}
     
