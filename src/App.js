@@ -4,10 +4,10 @@ import {
   Switch,
   Route,
 } from "react-router-dom";
-import Login from "./Login";
-import Signup from "./Signup";
-import Home from "./Home";
 
+import Home from "./Home";
+import Login from "./pages/pageLogin";
+import Signup from "./pages/pageSignup";
 
 export default function App() {
     
@@ -32,7 +32,7 @@ export default function App() {
     return (
         <Router>
             <Switch>
-                <Route path="/home">
+                <Route path="/">
                     <Home />
                 </Route>
             </Switch>

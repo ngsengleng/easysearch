@@ -1,4 +1,4 @@
-.signupForm, .signupBox {
+.Form, .Boxes, .Title {
     display: flex;
     justify-content: center;
     align-content: center;
@@ -7,8 +7,16 @@
     margin: 0 auto;
 }
 
-.signupButton {
+.loginButton {
     padding-top: 30px;
     display: flex;
     flex-direction: column;
+}
+
+.error {
+    color: red;
+}
+
+h3 {
+    text-decoration: underline;
 }
