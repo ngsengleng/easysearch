@@ -9,15 +9,15 @@ In the project directory, you can run:
 ### Necessary installations
 
 ## Dependencies
-@material-ui/core
-@material-ui/icons
-@react-firebase/auth
-firebase
-react-dom
-react-hook-form
-react-router-dom
-react
-react-script
+- @material-ui/core
+- @material-ui/icons
+- @react-firebase/auth
+- firebase
+- react-dom
+- react-hook-form
+- react-router-dom
+- react
+- react-script
 
 ### `yarn start`
 
