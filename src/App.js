@@ -1,41 +1,19 @@
-import React, { useState } from "react";
 import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-} from "react-router-dom";
+    FirebaseAuthConsumer,
+    IfFirebaseAuthed,
+    IfFirebaseUnAuthed
+} from "@react-firebase/auth";
 
-import Home from "./Home";
-import Login from "./pages/pageLogin";
-import Signup from "./pages/pageSignup";
+import NoAuth from "./routes/RouteNoAuth";
+import UserAuth from "./routes/RouteUserAuth";
 
 export default function App() {
     
-    const [token, setToken] = useState();
-
-    if (!token) {
-        return (
-            <Router>
-                <Switch>
-                    <Route path="/signup">
-                        <Signup />
-                    </Route>
-
-                    <Route path="/">
-                        <Login setToken={setToken} />
-                    </Route>
-                </Switch>
-            </Router>
-        )
+    // do firebase authentication
+    // TODO
+    if (false) {
+        return <NoAuth />;
     }
     
-    return (
-        <Router>
-            <Switch>
-                <Route path="/">
-                    <Home />
-                </Route>
-            </Switch>
-        </Router>
-    )
+    return <UserAuth />;
 }
