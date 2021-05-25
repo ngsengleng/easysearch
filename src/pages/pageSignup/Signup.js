@@ -3,9 +3,8 @@ import React, { useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
 import { Button, TextField } from "@material-ui/core";
-
 import { firebase } from "@firebase/app";
-// TODO
+import PageTitle from "../../components/PageTitle";
 
 export default function Signup() {
     const { control, handleSubmit, watch } = useForm();
@@ -29,14 +28,7 @@ export default function Signup() {
 
     return (
         <div className={styles.Form}>
-            <div className={styles.Title}>
-                <h1>
-                    EasySearch
-                </h1>
-                <h3>
-                    We get the best deals anywhere
-                </h3>
-            </div>
+            <PageTitle />
             <form className={styles.Boxes} onSubmit={handleSubmit(signUp)}>
 
                 <Controller className={styles.textBox}

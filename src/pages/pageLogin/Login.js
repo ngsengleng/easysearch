@@ -5,6 +5,7 @@ import { Link, useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Button, TextField } from "@material-ui/core";
 import { firebase } from "@firebase/app";
+import PageTitle from "../../components/PageTitle";
 
 // TODO
 // credential verification
@@ -29,14 +30,7 @@ export default function Login() {
     
     return (
         <div className={styles.Form}>
-            <div className={styles.Title}>
-                <h1>
-                    EasySearch
-                </h1>
-                <h3>
-                    We get the best deals anywhere
-                </h3>
-            </div>
+            <PageTitle />
             <form className={styles.Boxes} onSubmit={handleSubmit(onSubmit)}>
                 
                 <Controller

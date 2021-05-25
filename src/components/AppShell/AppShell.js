@@ -2,7 +2,8 @@ import {
     AppBar, 
     Button, 
     IconButton, 
-    Toolbar
+    Toolbar,
+    Typography
 } from "@material-ui/core";
 import {
     FirebaseAuthConsumer,
@@ -24,9 +25,12 @@ export default function AppShell() {
                 <IconButton className={styles.menuButton} color="inherit" aria-label="menu">
                     <MenuIcon />
                 </IconButton>
+                <Typography variant="h6" className={styles.title}>
+                    EasySearch
+                </Typography>
                 <FirebaseAuthConsumer>
                 <IfFirebaseAuthed>
-                    <Button color="inherit" onClick={() => handleLogout(firebase)}>Logout</Button>
+                    <Button className={styles.logoutButton} color="inherit" onClick={() => handleLogout(firebase)}>Logout</Button>
                 </IfFirebaseAuthed>
             </FirebaseAuthConsumer>
             </Toolbar>
