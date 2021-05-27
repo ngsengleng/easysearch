@@ -8,13 +8,16 @@ import { firebase } from "@firebase/app";
 import { FirebaseAuthProvider } from "@react-firebase/auth";
 import "@firebase/auth";
 
+import Test from "./testfile";
+import DB from "./dbtest";
+
 firebase.initializeApp(config);
 const rootElement = document.getElementById("root");
 
 ReactDOM.render(
   <StrictMode>
     <FirebaseAuthProvider {...config} firebase={firebase}>
-      <App />
+      <Test />
     </FirebaseAuthProvider>
   </StrictMode>,
   rootElement
