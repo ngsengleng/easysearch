@@ -5,10 +5,10 @@ import { Button, Grid } from "@material-ui/core";
 
 // this is able to render object onClick
 
-export default function Data(props) {
-    const dbRef = firebase.database().ref("/airpods/" + props.store);
+export default function RenderResults(props) {
+    const dbRef = firebase.database().ref("/" + props.item + "/" + props.store);
     const [value, setValue] = useState();
-    const [bool, setBool] = useState();
+    const [bool, setBool] = useState(false);
 
     const fetchData = () => dbRef.on('value', (snapshot) => {
         const data = snapshot.val();
@@ -22,7 +22,7 @@ export default function Data(props) {
             <Button variant="contained" color="primary" onClick={fetchData} >get something</Button>
             <RenderLink 
                 bool={bool}
-                url={"https://" + value?.url} />
+                url={"https://" + value.url} />
         </Grid>
             
     )
@@ -32,7 +32,6 @@ function RenderLink(props) {
     if (props.bool) {
         return (
             <Grid item>
-                <p>{props.url}</p>
                 <a href={props.url}>test</a>
             </Grid>
         )

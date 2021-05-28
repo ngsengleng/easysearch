@@ -3,22 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { config } from "./config/firebase";
-import { firebase } from "@firebase/app";
-import { FirebaseAuthProvider } from "@react-firebase/auth";
-import "@firebase/auth";
 
-import Test from "./testfile";
-import DB from "./dbtest";
 
-firebase.initializeApp(config);
 const rootElement = document.getElementById("root");
 
 ReactDOM.render(
   <StrictMode>
-    <FirebaseAuthProvider {...config} firebase={firebase}>
-      <Test />
-    </FirebaseAuthProvider>
+      <App />
   </StrictMode>,
   rootElement
 );

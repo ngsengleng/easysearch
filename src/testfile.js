@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Test() {
     const classes = useStyles();
-    const str = "Lazada";
+    const str = "ezbuy";
 
 
     function FormRow() {
