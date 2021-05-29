@@ -1,41 +1,45 @@
-import React, { useState } from "react";
-import firebase from "firebase/app";
-import "firebase/database";
-import { Button, Grid } from "@material-ui/core";
+import React from "react";
+
+import { Grid } from "@material-ui/core";
+import styles from "./RenderResults.module.css";
 
 // this is able to render object onClick
 
 export default function RenderResults(props) {
-    const dbRef = firebase.database().ref("/" + props.item + "/" + props.store);
-    const [value, setValue] = useState();
-    const [bool, setBool] = useState(false);
-
-    const fetchData = () => dbRef.on('value', (snapshot) => {
-        const data = snapshot.val();
-        setValue(data);
-        setBool(true);
-      })
-
-
+  if (props.bool) {
     return (
-        <Grid container justify="center">
-            <Button variant="contained" color="primary" onClick={fetchData} >get something</Button>
-            <RenderLink 
-                bool={bool}
-                url={"https://" + value.url} />
-        </Grid>
-            
-    )
+      <Grid container justify="center">
+        <RenderLink
+          bool={props.bool}
+          url={"https://" + props.itemData?.url}
+          itemData={props.itemData}
+        />
+      </Grid>
+    );
+  } else {
+    return null;
+  }
 }
 
 function RenderLink(props) {
-    if (props.bool) {
-        return (
-            <Grid item>
-                <a href={props.url}>test</a>
-            </Grid>
-        )
-    } else {
-        return null;
-    }
+  return (
+    <Grid item>
+      <Grid item>
+        <img
+          className={styles.photo}
+          src={props.itemData?.image}
+          alt="product"
+        />
+      </Grid>
+      <Grid item>
+        <p>{props.itemData?.title}</p>
+      </Grid>
+      <Grid item>
+        <p>{props.itemData?.price}</p>
+      </Grid>
+      <Grid item>
+        <a href={props.url}>Go to product</a>
+      </Grid>
+    </Grid>
+  );
 }

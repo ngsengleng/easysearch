@@ -10,70 +10,70 @@ import { firebase } from "@firebase/app";
 // credential verification
 
 export default function Login() {
+  const { control, handleSubmit } = useForm();
+  const history = useHistory();
+  const onSubmit = async (data) => {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(data.Email, data.Password)
+      .then(history.push("/"))
+      .catch((error) => {
+        var errorCode = error.code;
+        if (errorCode === "auth/wrong-password") {
+          alert("Wrong password.");
+        } else if (errorCode === "auth/user-not-found") {
+          alert("This user does not exist.");
+        }
+      });
+  };
 
-    const { control, handleSubmit } = useForm();
-    const history = useHistory();
-    const onSubmit = async data => {
-        firebase.auth().signInWithEmailAndPassword(data.Email, data.Password)
-            .then(history.push("/"))
-            .catch(error => {
-                var errorCode = error.code;
-                if (errorCode === 'auth/wrong-password') {
-                    alert('Wrong password.');
-                } else if (errorCode === 'auth/user-not-found'){
-                    alert("This user does not exist.");
-                }
-            });
-            
-    }
-    
-    return (
-        <div className={styles.Form}>
-            <form className={styles.Boxes} onSubmit={handleSubmit(onSubmit)}>
-                
-                <Controller
-                    name="Email"
-                    control={control}
-                    defaultValue=""
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                    <TextField
-                        label="Email"
-                        value={value}
-                        onChange={onChange}
-                        error={!!error}
-                        helperText={error ? error.message : null}
-                    />
-                    )}
-                    rules={{ required: 'Email required' }}
-                />
-            
-                <Controller
-                    name="Password"
-                    control={control}
-                    defaultValue=""
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                    <TextField
-                        label="Password"
-                        value={value}
-                        onChange={onChange}
-                        error={!!error}
-                        helperText={error ? error.message : null}
-                    />
-                    )}
-                    rules={{ required: 'Password required' }}
-                />
+  return (
+    <div className={styles.Form}>
+      <form className={styles.Boxes} onSubmit={handleSubmit(onSubmit)}>
+        <Controller
+          name="Email"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <TextField
+              label="Email"
+              value={value}
+              onChange={onChange}
+              error={!!error}
+              helperText={error ? error.message : null}
+            />
+          )}
+          rules={{ required: "Email required" }}
+        />
 
-                <div className={styles.loginButton}>
-                    <Button variant="contained" color="primary" type="submit">login</Button> 
-                    <Link to="/signup">
-                        New user?
-                    </Link>
-                </div>     
-            </form>
+        <Controller
+          name="Password"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <TextField
+              type="password"
+              label="Password"
+              value={value}
+              onChange={onChange}
+              error={!!error}
+              helperText={error ? error.message : null}
+            />
+          )}
+          rules={{ required: "Password required" }}
+        />
+
+        <div className={styles.loginButton}>
+          <Button variant="contained" color="primary" type="submit">
+            login
+          </Button>
+          <Link to="/signup">New user?</Link>
         </div>
-    )
+      </form>
+    </div>
+  );
 }
 
 Login.propTypes = {
-    setToken: PropTypes.func.isRequired
-}
+  setToken: PropTypes.func.isRequired,
+};
