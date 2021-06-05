@@ -4,15 +4,24 @@ import {
   IconButton,
   Toolbar,
   Typography,
+  Menu,
+  MenuItem,
 } from "@material-ui/core";
 import { FirebaseAuthConsumer, IfFirebaseAuthed } from "@react-firebase/auth";
 import { firebase } from "@firebase/app";
 import "@firebase/auth";
 import MenuIcon from "@material-ui/icons/Menu";
 import styles from "./AppShell.module.css";
-
+import React from "react";
 export default function AppShell() {
-  const handleLogout = () => {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
     firebase.auth().signOut();
   };
 
@@ -32,13 +41,26 @@ export default function AppShell() {
         <FirebaseAuthConsumer>
           <IfFirebaseAuthed>
             {() => (
-              <Button
-                className={styles.logoutButton}
-                color="inherit"
-                onClick={handleLogout}
-              >
-                Logout
-              </Button>
+              <div>
+                <Button
+                  color="inherit"
+                  aria-controls="simple-menu"
+                  aria-haspopup="true"
+                  onClick={handleClick}
+                >
+                  Username
+                </Button>
+                <Menu
+                  id="simple-menu"
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={handleClose}>My account</MenuItem>
+                  <MenuItem onClick={handleClose}>Logout</MenuItem>
+                </Menu>
+              </div>
             )}
           </IfFirebaseAuthed>
         </FirebaseAuthConsumer>

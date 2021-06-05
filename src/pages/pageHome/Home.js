@@ -11,10 +11,10 @@ import firebase from "firebase/app";
 import "firebase/database";
 
 export default function Home() {
+  var key = 0;
   const store = "ezbuy";
 
   const { control, handleSubmit } = useForm();
-
   const [value, setValue] = useState();
   const [bool, setBool] = useState(false);
 
@@ -23,14 +23,21 @@ export default function Home() {
   };
 
   const fetchData = (data, store) => {
-    const dbRef = firebase.database().ref("/" + data.searchValue + "/" + store);
+    const dbRef = firebase.database().ref("/" + data.searchValue);
     dbRef.on("value", (snapshot) => {
-      const data = snapshot.val();
-      setValue(data);
-      setBool(true);
+      if (snapshot.exists()) {
+        const dataArr = [];
+        snapshot.forEach((entry) => {
+          dataArr.push([entry.key, entry.val()]);
+        });
+        setValue(dataArr);
+        setBool(true);
+      } else {
+        alert("no product available");
+      }
     });
   };
-
+  console.log(value);
   return (
     <div>
       <form className={styles.home} onSubmit={handleSubmit(onSubmit)}>
@@ -46,8 +53,11 @@ export default function Home() {
               size="small"
               value={value}
               onChange={onChange}
+              error={!!error}
+              helperText={error ? error.message : null}
             />
           )}
+          rules={{ required: "Please type something" }}
         />
         <Button
           variant="contained"
@@ -58,7 +68,17 @@ export default function Home() {
           Search
         </Button>
       </form>
-      <RenderResults itemData={value} bool={bool} />
+      {value?.map((entry) => {
+        key += 1;
+        return (
+          <RenderResults
+            key={key}
+            itemData={entry[1]}
+            bool={bool}
+            store={entry[0]}
+          />
+        );
+      })}
     </div>
   );
 }
