@@ -12,7 +12,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 
 import { firebase } from "@firebase/app";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 
 function Copyright() {
@@ -50,11 +50,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const classes = useStyles();
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = useForm();
+  const { handleSubmit, control } = useForm();
   const history = useHistory();
   const onSubmit = async (data) => {
     firebase
@@ -84,27 +80,47 @@ export default function SignIn() {
           Sign in
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            id="email"
-            label="Email Address"
-            autoComplete="email"
-            autoFocus
-            error={errors.Email}
-            {...register("Email", { required: true })}
+          <Controller
+            name="Email"
+            control={control}
+            defaultValue=""
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <TextField
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                id="email"
+                label="Email Address"
+                autoComplete="email"
+                autoFocus
+                value={value}
+                onChange={onChange}
+                error={!!error}
+                helperText={error ? error.message : null}
+              />
+            )}
+            rules={{ required: "Email required" }}
           />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            error={errors.Password}
-            {...register("Password", { required: true })}
+          <Controller
+            name="Password"
+            control={control}
+            defaultValue=""
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <TextField
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                type="password"
+                label="Password"
+                id="password"
+                autoComplete="current-password"
+                value={value}
+                onChange={onChange}
+                error={!!error}
+                helperText={error ? error.message : null}
+              />
+            )}
+            rules={{ required: "Password required" }}
           />
           <Button
             type="submit"
