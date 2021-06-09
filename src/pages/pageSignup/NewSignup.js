@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -50,27 +50,29 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const classes = useStyles();
-  const { handleSubmit, control } = useForm();
+
+  const { control, handleSubmit, watch } = useForm();
+
+  // password comparing variables
+  const repeatPassword = useRef({});
+  repeatPassword.current = watch("Password", "");
+
   const history = useHistory();
-  const onSubmit = async (data) => {
-    firebase
+  const signUp = async (data) => {
+    await firebase
       .auth()
-      .signInWithEmailAndPassword(data.Email, data.Password)
+      .createUserWithEmailAndPassword(data.Email, data.Password)
       .then(history.push("/"))
       .catch((error) => {
         var errorCode = error.code;
-        if (errorCode === "auth/wrong-password") {
-          alert("Wrong password.");
-        } else if (errorCode === "auth/user-not-found") {
-          alert("This user does not exist.");
-        } else {
-          alert("invalid email");
+        if (errorCode === "auth/invalid-email") {
+          alert("This is not a valid email.");
+          history.push("/signup");
         }
       });
   };
-
   useEffect(() => {
-    document.title = "Login";
+    document.title = "Signup";
   }, []);
 
   return (
@@ -81,9 +83,9 @@ export default function SignIn() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Sign up
         </Typography>
-        <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
+        <form className={classes.form} onSubmit={handleSubmit(signUp)}>
           <Controller
             name="Email"
             control={control}
@@ -93,7 +95,6 @@ export default function SignIn() {
                 variant="outlined"
                 margin="normal"
                 fullWidth
-                id="email"
                 label="Email Address"
                 autoComplete="email"
                 autoFocus
@@ -116,15 +117,40 @@ export default function SignIn() {
                 fullWidth
                 type="password"
                 label="Password"
-                id="password"
-                autoComplete="current-password"
                 value={value}
                 onChange={onChange}
                 error={!!error}
                 helperText={error ? error.message : null}
               />
             )}
-            rules={{ required: "Password required" }}
+            rules={{
+              required: { value: true, message: "Password required" },
+              minLength: { value: 6, message: "Password is too short" },
+            }}
+          />
+          <Controller
+            name="PwdCheck"
+            control={control}
+            defaultValue=""
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <TextField
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                type="password"
+                label="Retype password"
+                value={value}
+                onChange={onChange}
+                error={!!error}
+                helperText={error ? error.message : null}
+              />
+            )}
+            rules={{
+              validate: {
+                value: (value) =>
+                  value === repeatPassword.current || "Passwords do not match",
+              },
+            }}
           />
           <Button
             type="submit"
@@ -133,17 +159,13 @@ export default function SignIn() {
             color="primary"
             className={classes.submit}
           >
-            Sign In
+            Sign Up
           </Button>
           <Grid container>
-            <Grid item xs>
-              <Link href="/forget" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
+            <Grid item xs></Grid>
             <Grid item>
-              <Link href="/signup" variant="body2">
-                {"Don't have an account? Sign Up"}
+              <Link href="/" variant="body2">
+                {"Already have an account? Sign in"}
               </Link>
             </Grid>
           </Grid>

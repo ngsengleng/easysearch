@@ -1,2 +1,2 @@
-import Signup from "./Signup";
+import Signup from "./NewSignup";
 export default Signup;
