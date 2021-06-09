@@ -1,28 +1,35 @@
-// this is the homepage
-// TODO
-
 import React, { useState } from "react";
 import { Button, TextField } from "@material-ui/core";
 import { useForm, Controller } from "react-hook-form";
 import styles from "./Home.module.css";
 import RenderResults from "../../components/RenderResults";
 
-import firebase from "firebase/app";
 import "firebase/database";
+import "firebase/firestore";
+import { firebase } from "@firebase/app";
+
+var db = firebase.firestore();
 
 export default function Home() {
   var key = 0;
-  const store = "ezbuy";
 
   const { control, handleSubmit } = useForm();
   const [value, setValue] = useState();
   const [bool, setBool] = useState(false);
 
   const onSubmit = (keyword) => {
-    fetchData(keyword, store);
+    fetchData(keyword);
   };
 
-  const fetchData = (data, store) => {
+  const updateHistory = (keyword) => {
+    const currentUser = firebase.auth().currentUser.uid;
+    var searchHistory = db.collection("users").doc(currentUser);
+    searchHistory.update({
+      searchHistory: firebase.firestore.FieldValue.arrayUnion(keyword),
+    });
+  };
+
+  const fetchData = (data) => {
     const dbRef = firebase.database().ref("/" + data.searchValue);
     dbRef.on("value", (snapshot) => {
       if (snapshot.exists()) {
@@ -32,14 +39,16 @@ export default function Home() {
         });
         setValue(dataArr);
         setBool(true);
+        updateHistory(data.searchValue);
       } else {
-        alert("no product available");
+        setValue();
       }
     });
   };
-  console.log(value);
+
   return (
     <div>
+      <h1 className={styles.title}>What do you want to buy today?</h1>
       <form className={styles.home} onSubmit={handleSubmit(onSubmit)}>
         <Controller
           name="searchValue"

@@ -1,17 +1,23 @@
 .home {
-    justify-content: center;
-    align-content: center;
-    text-align: center;
-    flex-direction: column;
-    margin: 0 1rem;
+  justify-content: center;
+  align-content: center;
+  text-align: center;
+  flex-direction: column;
+  margin: 0 1rem;
 }
 
 .searchBox {
-    width: 50%;
-    align-self: center;
-    padding-right: 1rem;
+  width: 50%;
+  align-self: center;
+  padding-right: 1rem;
 }
 
 .searchButton {
-    display: inline-block;
+  display: inline-block;
+}
+
+.title {
+  justify-content: center;
+  text-align: center;
+  display: flex;
 }

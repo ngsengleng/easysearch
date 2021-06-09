@@ -30,7 +30,7 @@ export default function RenderResults(props) {
       </Grid>
     );
   } else {
-    return null;
+    return <p>no items</p>;
   }
 }
 
