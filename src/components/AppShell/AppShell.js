@@ -13,7 +13,10 @@ import "@firebase/auth";
 import MenuIcon from "@material-ui/icons/Menu";
 import styles from "./AppShell.module.css";
 import React, { useState } from "react";
+import { useHistory, withRouter } from "react-router-dom";
+
 export default function AppShell() {
+  const history = useHistory();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
@@ -39,13 +42,28 @@ export default function AppShell() {
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" className={styles.title}>
+        <Typography variant="h5" className={styles.title}>
           EasySearch
         </Typography>
         <FirebaseAuthConsumer>
           <IfFirebaseAuthed>
             {() => (
               <div>
+                <Button
+                  color="inherit"
+                  aria="search-history"
+                  onClick={() => history.push("/")}
+                >
+                  home
+                </Button>
+                <Button
+                  color="inherit"
+                  aria="search-history"
+                  onClick={() => history.push("/history")}
+                >
+                  history
+                </Button>
+
                 <Button
                   color="inherit"
                   aria-controls="simple-menu"

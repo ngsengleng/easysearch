@@ -13,20 +13,23 @@ import AppShell from "./components/AppShell";
 import NoAuth from "./routes/RouteNoAuth";
 import UserAuth from "./routes/RouteUserAuth";
 
+import { BrowserRouter } from "react-router-dom";
 export default function App() {
   return (
     <div>
-      <FirebaseAuthProvider {...config} firebase={firebase}>
-        <AppShell />
-        <FirebaseAuthConsumer>
-          <IfFirebaseAuthed>
-            <UserAuth />
-          </IfFirebaseAuthed>
-          <IfFirebaseUnAuthed>
-            <NoAuth />
-          </IfFirebaseUnAuthed>
-        </FirebaseAuthConsumer>
-      </FirebaseAuthProvider>
+      <BrowserRouter>
+        <FirebaseAuthProvider {...config} firebase={firebase}>
+          <AppShell />
+          <FirebaseAuthConsumer>
+            <IfFirebaseAuthed>
+              <UserAuth />
+            </IfFirebaseAuthed>
+            <IfFirebaseUnAuthed>
+              <NoAuth />
+            </IfFirebaseUnAuthed>
+          </FirebaseAuthConsumer>
+        </FirebaseAuthProvider>
+      </BrowserRouter>
     </div>
   );
 }
