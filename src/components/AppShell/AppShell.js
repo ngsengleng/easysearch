@@ -13,7 +13,7 @@ import "@firebase/auth";
 import MenuIcon from "@material-ui/icons/Menu";
 import styles from "./AppShell.module.css";
 import React, { useState } from "react";
-import { useHistory, withRouter } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 export default function AppShell() {
   const history = useHistory();
@@ -35,13 +35,6 @@ export default function AppShell() {
   return (
     <AppBar position="static">
       <Toolbar>
-        <IconButton
-          className={styles.menuButton}
-          color="inherit"
-          aria-label="menu"
-        >
-          <MenuIcon />
-        </IconButton>
         <Typography variant="h5" className={styles.title}>
           EasySearch
         </Typography>
@@ -63,14 +56,20 @@ export default function AppShell() {
                 >
                   history
                 </Button>
-
+                <Button
+                  color="inherit"
+                  aria="search-history"
+                  onClick={() => history.push("/wishlist")}
+                >
+                  wishlist
+                </Button>
                 <Button
                   color="inherit"
                   aria-controls="simple-menu"
                   aria-haspopup="true"
                   onClick={handleClick}
                 >
-                  Username
+                  User
                 </Button>
                 <Menu
                   id="simple-menu"
