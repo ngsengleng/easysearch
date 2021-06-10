@@ -21,6 +21,7 @@ export default function Home() {
     fetchData(keyword);
   };
 
+  // submits user search history keyword to firestore
   const updateHistory = (keyword) => {
     const currentUser = firebase.auth().currentUser.uid;
     var searchHistory = db.collection("users").doc(currentUser);
@@ -29,6 +30,8 @@ export default function Home() {
     });
   };
 
+  // gets data from firebase realtime database
+  // on successful return will save search keyword under user
   const fetchData = (data) => {
     const dbRef = firebase.database().ref("/" + data.searchValue);
     dbRef.on("value", (snapshot) => {

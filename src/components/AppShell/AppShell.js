@@ -12,15 +12,19 @@ import { firebase } from "@firebase/app";
 import "@firebase/auth";
 import MenuIcon from "@material-ui/icons/Menu";
 import styles from "./AppShell.module.css";
-import React from "react";
+import React, { useState } from "react";
 export default function AppShell() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleSignout = () => {
     setAnchorEl(null);
     firebase.auth().signOut();
   };
@@ -57,8 +61,8 @@ export default function AppShell() {
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                 >
-                  <MenuItem onClick={handleClose}>My account</MenuItem>
-                  <MenuItem onClick={handleClose}>Logout</MenuItem>
+                  <MenuItem onClick={handleSignout}>My account</MenuItem>
+                  <MenuItem onClick={handleSignout}>Logout</MenuItem>
                 </Menu>
               </div>
             )}
