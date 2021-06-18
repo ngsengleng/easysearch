@@ -10,26 +10,55 @@ import firebase from "@firebase/app";
 import "@firebase/auth";
 
 import AppShell from "./components/AppShell";
-import NoAuth from "./routes/RouteNoAuth";
-import UserAuth from "./routes/RouteUserAuth";
 
-import { BrowserRouter } from "react-router-dom";
+import Construction from "./pages/pageUnderConstruction";
+import Home from "./pages/pageHome";
+import History from "./pages/pageHistory";
+import Login from "./pages/pageLogin";
+import Signup from "./pages/pageSignup";
+import Wishlist from "./pages/pageWishlist";
+
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 export default function App() {
   return (
     <div>
-      <BrowserRouter>
+      <Router>
         <FirebaseAuthProvider {...config} firebase={firebase}>
           <AppShell />
           <FirebaseAuthConsumer>
             <IfFirebaseAuthed>
-              <UserAuth />
+              <Switch>
+                <Route path="/history">
+                  <History />
+                </Route>
+
+                <Route path="/wishlist">
+                  <Wishlist />
+                </Route>
+
+                <Route exact path="/">
+                  <Home />
+                </Route>
+              </Switch>
             </IfFirebaseAuthed>
             <IfFirebaseUnAuthed>
-              <NoAuth />
+              <Switch>
+                <Route path="/signup">
+                  <Signup />
+                </Route>
+
+                <Route path="/forget">
+                  <Construction />
+                </Route>
+
+                <Route path="/">
+                  <Login />
+                </Route>
+              </Switch>
             </IfFirebaseUnAuthed>
           </FirebaseAuthConsumer>
         </FirebaseAuthProvider>
-      </BrowserRouter>
+      </Router>
     </div>
   );
 }

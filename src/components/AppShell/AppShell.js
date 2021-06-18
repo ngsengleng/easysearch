@@ -11,9 +11,9 @@ import { firebase } from "@firebase/app";
 import "@firebase/auth";
 import styles from "./AppShell.module.css";
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, withRouter } from "react-router-dom";
 
-export default function AppShell() {
+function AppShell() {
   const history = useHistory();
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -87,3 +87,5 @@ export default function AppShell() {
     </AppBar>
   );
 }
+
+export default withRouter(AppShell);
