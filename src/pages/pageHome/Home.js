@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, TextField } from "@material-ui/core";
 import { useForm, Controller } from "react-hook-form";
 import styles from "./Home.module.css";
@@ -20,6 +20,10 @@ export default function Home() {
   const onSubmit = (keyword) => {
     fetchData(keyword);
   };
+
+  useEffect(() => {
+    document.title = "Home";
+  }, []);
 
   // submits user search history keyword to firestore
   const updateHistory = (keyword) => {

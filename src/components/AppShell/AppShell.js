@@ -1,7 +1,6 @@
 import {
   AppBar,
   Button,
-  IconButton,
   Toolbar,
   Typography,
   Menu,
@@ -10,7 +9,6 @@ import {
 import { FirebaseAuthConsumer, IfFirebaseAuthed } from "@react-firebase/auth";
 import { firebase } from "@firebase/app";
 import "@firebase/auth";
-import MenuIcon from "@material-ui/icons/Menu";
 import styles from "./AppShell.module.css";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
