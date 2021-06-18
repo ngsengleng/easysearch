@@ -11,6 +11,7 @@ import { firebase } from "@firebase/app";
 var db = firebase.firestore();
 
 export default function Home() {
+  // key for helping react keep track of map variables
   var key = 0;
 
   const { control, handleSubmit } = useForm();
@@ -26,12 +27,25 @@ export default function Home() {
   }, []);
 
   // submits user search history keyword to firestore
+  // name of product is saved as the document name
   const updateHistory = (keyword) => {
     const currentUser = firebase.auth().currentUser.uid;
-    var searchHistory = db.collection("users").doc(currentUser);
-    searchHistory.update({
-      searchHistory: firebase.firestore.FieldValue.arrayUnion(keyword),
-    });
+    var searchHistory = db
+      .collection("users")
+      .doc(currentUser)
+      .collection("searchHistory")
+      .doc(keyword);
+    searchHistory
+      .set(
+        {
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        },
+        { merge: true }
+      )
+      .then(() => console.log("successfully updated database"))
+      .catch((error) => {
+        console.error("Error updating document: ", error);
+      });
   };
 
   // gets data from firebase realtime database
@@ -49,6 +63,7 @@ export default function Home() {
         updateHistory(data.searchValue);
       } else {
         setValue();
+        alert("no results found");
       }
     });
   };

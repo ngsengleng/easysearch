@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -12,6 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 
 import { firebase } from "@firebase/app";
+
 import { useForm, Controller } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 
@@ -58,11 +60,15 @@ export default function SignIn() {
   repeatPassword.current = watch("Password", "");
 
   const history = useHistory();
+
+  // on successful signup create new document with user uid for search history
   const signUp = async (data) => {
     await firebase
       .auth()
       .createUserWithEmailAndPassword(data.Email, data.Password)
-      .then(history.push("/"))
+      .then(() => {
+        history.push("/");
+      })
       .catch((error) => {
         var errorCode = error.code;
         if (errorCode === "auth/invalid-email") {

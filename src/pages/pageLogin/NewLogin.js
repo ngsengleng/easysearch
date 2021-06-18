@@ -56,7 +56,9 @@ export default function SignIn() {
     firebase
       .auth()
       .signInWithEmailAndPassword(data.Email, data.Password)
-      .then(history.push("/"))
+      .then(() => {
+        history.push("/");
+      })
       .catch((error) => {
         var errorCode = error.code;
         if (errorCode === "auth/wrong-password") {

@@ -42,21 +42,21 @@ export default function AppShell() {
               <div>
                 <Button
                   color="inherit"
-                  aria="search-history"
+                  aria-describedby="home"
                   onClick={() => history.push("/")}
                 >
                   home
                 </Button>
                 <Button
                   color="inherit"
-                  aria="search-history"
+                  aria-describedby="search-history"
                   onClick={() => history.push("/history")}
                 >
                   history
                 </Button>
                 <Button
                   color="inherit"
-                  aria="search-history"
+                  aria-describedby="wishlist"
                   onClick={() => history.push("/wishlist")}
                 >
                   wishlist
