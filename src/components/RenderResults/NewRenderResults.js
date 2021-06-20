@@ -35,7 +35,8 @@ function RenderLink(props) {
 
   return (
     <Grid container item className={styles.itemBox}>
-      <Grid item xs={3}>
+      <Grid item xs={1}></Grid>
+      <Grid item xs={2}>
         <img
           className={styles.photo}
           src={props.itemData?.image}
@@ -55,6 +56,7 @@ function RenderLink(props) {
         <Button
           variant="outlined"
           color="primary"
+          style={{ color: "#212121" }}
           onClick={() => openInNewTab(props.url)}
         >
           Go to site
