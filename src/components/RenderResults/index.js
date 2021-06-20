@@ -1,2 +1,2 @@
-import Render from "./RenderResults";
+import Render from "./NewRenderResults";
 export default Render;

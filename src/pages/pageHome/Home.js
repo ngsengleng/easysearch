@@ -55,11 +55,22 @@ export default function Home() {
     dbRef.on("value", (snapshot) => {
       if (snapshot.exists()) {
         const dataArr = [];
+        const test = [];
         snapshot.forEach((entry) => {
           dataArr.push([entry.key, entry.val()]);
+          entry.val().forEach((x) => test.push([entry.key, x]));
         });
-        setValue(dataArr);
+        // sort by price from low to high
+        test.sort((a, b) => {
+          const priceA = a[1]["price"].substring(1);
+          const priceB = b[1]["price"].substring(1);
+          return priceA - priceB;
+        });
+        // sort by store name from a to z
+        //test.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+        setValue(test);
         setBool(true);
+        // add word to search history of user
         updateHistory(data.searchValue);
       } else {
         setValue();
