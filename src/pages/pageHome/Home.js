@@ -76,8 +76,30 @@ export default function Home() {
       });
   };
 
+  // https://easysearchserver.herokuapp.com/<insert keyword>/ezbuy
+  // https://easysearchserver.herokuapp.com/<insert keyword>/shopee
+  // https://easysearchcrawl.herokuapp.com/<insert keyword>/q100
+  // "https://easysearchcrawl.herokuapp.com/<insert>/amazon"
+  const runSearchAPI = async (keyword) => {
+    const shopee =
+      "https://easysearchserver.herokuapp.com/" + keyword + "/shopee";
+    const ezbuy =
+      "https://easysearchserver.herokuapp.com/" + keyword + "/ezbuy";
+    const amazon =
+      "https://easysearchcrawl.herokuapp.com/" + keyword + "/amazon";
+    const q100 = "https://easysearchcrawl.herokuapp.com/" + keyword + "/q100";
+    let success = true;
+    await fetch(shopee).catch((error) => (success = false));
+    await fetch(ezbuy).catch((error) => (success = false));
+    await fetch(amazon).catch((error) => (success = false));
+    await fetch(q100).catch((error) => (success = false));
+
+    return success;
+  };
+
   // gets data from firebase realtime database
   // on successful return will save search keyword under user
+
   const fetchData = (data) => {
     const dbRef = firebase.database().ref("/" + data.searchValue);
     dbRef.on("value", (snapshot) => {
@@ -93,8 +115,11 @@ export default function Home() {
         // add word to search history of user
         updateHistory(data.searchValue);
       } else {
-        setValue();
-        alert("no results found");
+        if (runSearchAPI(data.searchValue)) {
+          console.log("successfully searched");
+        } else {
+          console.log("you fucked up");
+        }
       }
     });
   };
