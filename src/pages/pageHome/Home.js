@@ -38,6 +38,8 @@ const useStyles = makeStyles({
 });
 
 export default function Home() {
+  // shops in circulation
+  const shops = ["ezbuy", "shopee", "amazon", "qoo10"];
   // key for helping react keep track of map variables
   var key = 0;
 
@@ -45,6 +47,11 @@ export default function Home() {
   const { control, handleSubmit } = useForm();
   const [value, setValue] = useState([]);
   const [bool, setBool] = useState(false);
+  const [apiSuccess, setApiSuccess] = useState(true);
+  const [sortConfig, setSortConfig] = useState({
+    key: "price",
+    direction: null,
+  });
 
   const onSubmit = (keyword) => {
     fetchData(keyword);
@@ -80,49 +87,24 @@ export default function Home() {
   // https://easysearchserver.herokuapp.com/<insert keyword>/shopee
   // https://easysearchcrawl.herokuapp.com/<insert keyword>/q100
   // "https://easysearchcrawl.herokuapp.com/<insert>/amazon"
-  const runSearchAPI = async (keyword) => {
-    const shopee =
-      "https://easysearchserver.herokuapp.com/" + keyword + "/shopee";
-    const ezbuy =
-      "https://easysearchserver.herokuapp.com/" + keyword + "/ezbuy";
-    const amazon =
-      "https://easysearchcrawl.herokuapp.com/" + keyword + "/amazon";
-    const q100 = "https://easysearchcrawl.herokuapp.com/" + keyword + "/q100";
-    let success = true;
-    await fetch(shopee).catch((error) => (success = false));
-    await fetch(ezbuy).catch((error) => (success = false));
-    await fetch(amazon).catch((error) => (success = false));
-    await fetch(q100).catch((error) => (success = false));
+  const runSearchAPI = async (keyword, shop) => {
+    const hyperlinks = {
+      shopee: "https://easysearchserver.herokuapp.com/" + keyword + "/shopee",
+      ezbuy: "https://easysearchserver.herokuapp.com/" + keyword + "/ezbuy",
+      amazon: "https://easysearchcrawl.herokuapp.com/" + keyword + "/amazon",
+      qoo10: "https://easysearchcrawl2.herokuapp.com/" + keyword + "/q100",
+    };
 
-    return success;
+    await Promise.all(
+      shop.map((x) =>
+        fetch(hyperlinks[x]).catch((error) => setApiSuccess(false))
+      )
+    );
+
+    return true;
   };
-
   // gets data from firebase realtime database
   // on successful return will save search keyword under user
-
-  const fetchData = (data) => {
-    const dbRef = firebase.database().ref("/" + data.searchValue);
-    dbRef.on("value", (snapshot) => {
-      if (snapshot.exists()) {
-        const dataArr = [];
-        const test = [];
-        snapshot.forEach((entry) => {
-          dataArr.push([entry.key, entry.val()]);
-          entry.val().forEach((x) => test.push([entry.key, x]));
-        });
-        setValue(test);
-        setBool(true);
-        // add word to search history of user
-        updateHistory(data.searchValue);
-      } else {
-        if (runSearchAPI(data.searchValue)) {
-          console.log("successfully searched");
-        } else {
-          console.log("you fucked up");
-        }
-      }
-    });
-  };
 
   // to set state of which sorter to do what
   const requestSort = (key) => {
@@ -137,10 +119,6 @@ export default function Home() {
     }
     setSortConfig({ key, direction });
   };
-  const [sortConfig, setSortConfig] = useState({
-    key: "price",
-    direction: null,
-  });
 
   // function to sort returned results
   const sortResults = (key) => {
@@ -159,6 +137,43 @@ export default function Home() {
         : value.sort((a, b) => (a[0] < b[0] ? 1 : -1));
     }
   };
+
+  const fetchData = (data) => {
+    const dbRef = firebase.database().ref("/" + data.searchValue);
+    dbRef.on("value", (snapshot) => {
+      if (snapshot.exists()) {
+        const dataArr = [];
+        const availableShops = [];
+
+        snapshot.forEach((entry) => {
+          availableShops.push(entry.key);
+          entry.val().forEach((x) => dataArr.push([entry.key, x]));
+        });
+        console.log(availableShops);
+        var leftoverShops = shops.filter(
+          (item) => !availableShops.some((item2) => item === item2)
+        );
+        console.log(leftoverShops);
+        if (leftoverShops.length !== 0) {
+          runSearchAPI(data.searchValue, leftoverShops);
+        } else {
+          setValue(dataArr);
+          setBool(true);
+          updateHistory(data.searchValue);
+        }
+      } else {
+        if (runSearchAPI(data.searchValue, shops)) {
+          console.log("successfully searched");
+        } else {
+          console.log("you fucked up");
+        }
+      }
+    });
+  };
+
+  if (!apiSuccess) {
+    console.log("failed api");
+  }
 
   return (
     <div>
