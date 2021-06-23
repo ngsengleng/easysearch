@@ -124,13 +124,15 @@ export default function Home() {
   const sortResults = (key) => {
     requestSort(key);
     if (key === "price") {
-      value.sort((a, b) => {
-        const priceA = a[1]["price"].substring(1);
-        const priceB = b[1]["price"].substring(1);
-        return sortConfig.direction === "descending"
-          ? priceA - priceB
-          : priceB - priceA;
-      });
+      setValue(
+        [...value].sort((a, b) => {
+          const priceA = a[1]["price"].substring(1);
+          const priceB = b[1]["price"].substring(1);
+          return sortConfig.direction === "descending"
+            ? priceA - priceB
+            : priceB - priceA;
+        })
+      );
     } else if (key === "store") {
       return sortConfig.direction === "descending"
         ? value.sort((a, b) => (a[0] < b[0] ? -1 : 1))
@@ -140,6 +142,11 @@ export default function Home() {
 
   const fetchData = (data) => {
     const dbRef = firebase.database().ref("/" + data.searchValue);
+
+    // function to get all the values
+    // await all of them
+    // process the data when they are all here
+
     dbRef.on("value", (snapshot) => {
       if (snapshot.exists()) {
         const dataArr = [];
@@ -149,11 +156,9 @@ export default function Home() {
           availableShops.push(entry.key);
           entry.val().forEach((x) => dataArr.push([entry.key, x]));
         });
-        console.log(availableShops);
-        var leftoverShops = shops.filter(
+        const leftoverShops = shops.filter(
           (item) => !availableShops.some((item2) => item === item2)
         );
-        console.log(leftoverShops);
         if (leftoverShops.length !== 0) {
           runSearchAPI(data.searchValue, leftoverShops);
         } else {
@@ -162,18 +167,14 @@ export default function Home() {
           updateHistory(data.searchValue);
         }
       } else {
-        if (runSearchAPI(data.searchValue, shops)) {
-          console.log("successfully searched");
-        } else {
-          console.log("you fucked up");
-        }
+        runSearchAPI(data.searchValue, shops);
       }
     });
   };
 
-  if (!apiSuccess) {
-    console.log("failed api");
-  }
+  useEffect(() => {
+    if (!apiSuccess) alert("error occured in fetching api data");
+  }, [apiSuccess]);
 
   return (
     <div>
