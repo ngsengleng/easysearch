@@ -196,7 +196,7 @@ export default function Home() {
       console.log("error occured in fetching api data");
     }
   }, [apiSuccess]);
-
+  console.log(value);
   return (
     <div>
       <h1 className={styles.title}>What do you want to buy today?</h1>
@@ -242,7 +242,7 @@ export default function Home() {
               ITEM NAME
             </Typography>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={1}>
             <Button
               size="medium"
               color="primary"
@@ -252,7 +252,7 @@ export default function Home() {
               price {sortConfig.key === "price" && sortConfig.direction}
             </Button>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={1}>
             <Button
               size="medium"
               className={classes.sortButton}
@@ -261,7 +261,17 @@ export default function Home() {
               store {sortConfig.key === "store" && sortConfig.direction}
             </Button>
           </Grid>
-          <Grid item xs={2} className={classes.headerText}>
+          <Grid item xs={1} className={classes.headerText}>
+            <Typography variant="button" display="block" gutterBottom>
+              RATING
+            </Typography>
+          </Grid>
+          <Grid item xs={1} className={classes.headerText}>
+            <Typography variant="button" display="block" gutterBottom>
+              WISHLIST
+            </Typography>
+          </Grid>
+          <Grid item xs={1} className={classes.headerText}>
             <Typography variant="button" display="block" gutterBottom>
               LINK TO SITE
             </Typography>

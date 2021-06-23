@@ -46,13 +46,19 @@ function RenderLink(props) {
       <Grid item xs={3}>
         <p>{props.itemData?.title}</p>
       </Grid>
-      <Grid item xs={2}>
+      <Grid item xs={1}>
         <p>{props.itemData?.price}</p>
       </Grid>
-      <Grid item xs={2}>
+      <Grid item xs={1}>
         <p>{props.store}</p>
       </Grid>
-      <Grid item xs={2}>
+      <Grid item xs={1}>
+        <p>{props.itemData?.ratings} out of 5</p>
+      </Grid>
+      <Grid item xs={1}>
+        <p>CLICK HERE</p>
+      </Grid>
+      <Grid item xs={1}>
         <Button
           variant="outlined"
           color="primary"
