@@ -14,7 +14,7 @@ import "firebase/database";
 import "firebase/firestore";
 import { firebase } from "@firebase/app";
 
-var db = firebase.firestore();
+const db = firebase.firestore();
 
 const useStyles = makeStyles({
   sortButton: {
@@ -64,6 +64,7 @@ export default function Home() {
   // name of product is saved as the document name
   const updateHistory = (keyword) => {
     const currentUser = firebase.auth().currentUser.uid;
+    console.log(currentUser);
     var searchHistory = db
       .collection("users")
       .doc(currentUser)
@@ -237,12 +238,12 @@ export default function Home() {
               IMAGE
             </Typography>
           </Grid>
-          <Grid item xs={3} className={classes.headerText}>
+          <Grid item xs={1} className={classes.headerText}>
             <Typography variant="button" display="block" gutterBottom>
               ITEM NAME
             </Typography>
           </Grid>
-          <Grid item xs={1}>
+          <Grid item xs={2}>
             <Button
               size="medium"
               color="primary"
@@ -252,7 +253,7 @@ export default function Home() {
               price {sortConfig.key === "price" && sortConfig.direction}
             </Button>
           </Grid>
-          <Grid item xs={1}>
+          <Grid item xs={2}>
             <Button
               size="medium"
               className={classes.sortButton}
