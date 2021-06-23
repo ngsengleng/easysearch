@@ -67,7 +67,7 @@ export default function SignIn() {
       .auth()
       .createUserWithEmailAndPassword(data.Email, data.Password)
       .then(() => {
-        history.push("/home");
+        history.push("/");
       })
       .catch((error) => {
         var errorCode = error.code;

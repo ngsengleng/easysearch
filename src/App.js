@@ -36,7 +36,7 @@ export default function App() {
                   <Wishlist />
                 </Route>
 
-                <Route path="/home">
+                <Route exact path="/">
                   <Home />
                 </Route>
               </Switch>
@@ -51,7 +51,7 @@ export default function App() {
                   <Construction />
                 </Route>
 
-                <Route path="/login">
+                <Route exact path="/">
                   <Login />
                 </Route>
               </Switch>

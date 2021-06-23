@@ -28,7 +28,7 @@ function AppShell() {
   const handleSignout = () => {
     setAnchorEl(null);
     firebase.auth().signOut();
-    history.push("/login");
+    history.push("/");
   };
 
   return (
@@ -44,7 +44,7 @@ function AppShell() {
                 <Button
                   color="inherit"
                   aria-describedby="home"
-                  onClick={() => history.push("/home")}
+                  onClick={() => history.push("/")}
                 >
                   home
                 </Button>
