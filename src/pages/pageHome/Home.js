@@ -10,7 +10,6 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import styles from "./Home.module.css";
 import RenderResults from "../../components/RenderResults";
-
 import "firebase/database";
 import "firebase/firestore";
 import { firebase } from "@firebase/app";
@@ -42,12 +41,12 @@ export default function Home() {
   const shops = ["ezbuy", "shopee", "amazon", "qoo10"];
   // key for helping react keep track of map variables
   var key = 0;
-
   const classes = useStyles();
   const { control, handleSubmit } = useForm();
   const [value, setValue] = useState([]);
   const [bool, setBool] = useState(false);
   const [apiSuccess, setApiSuccess] = useState(true);
+
   const [sortConfig, setSortConfig] = useState({
     key: "price",
     direction: null,
@@ -162,7 +161,7 @@ export default function Home() {
     // function to get all the values
     // await all of them
     // process the data when they are all here
-    let boolean = false;
+    let isRetrieving = false;
     dbRef.on("value", (snapshot) => {
       if (snapshot.exists()) {
         const dataArr = [];
@@ -175,17 +174,17 @@ export default function Home() {
         leftoverShops = shops.filter(
           (item) => !availableShops.some((item2) => item === item2)
         );
-        if (leftoverShops.length !== 0 && !boolean) {
-          boolean = true;
+        if (leftoverShops.length !== 0 && !isRetrieving) {
+          isRetrieving = true;
           console.log("run");
           runSearchAPI(data.searchValue, leftoverShops);
         }
         setValue(dataArr);
-        console.log(boolean);
+        console.log(isRetrieving);
         setBool(true);
       } else {
         runSearchAPI(data.searchValue, shops);
-        boolean = true;
+        isRetrieving = true;
       }
     });
   };

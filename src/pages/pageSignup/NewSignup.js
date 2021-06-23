@@ -67,13 +67,15 @@ export default function SignIn() {
       .auth()
       .createUserWithEmailAndPassword(data.Email, data.Password)
       .then(() => {
-        history.push("/");
+        history.push("/home");
       })
       .catch((error) => {
         var errorCode = error.code;
         if (errorCode === "auth/invalid-email") {
           alert("This is not a valid email.");
           history.push("/signup");
+        } else {
+          alert("email already exists");
         }
       });
   };

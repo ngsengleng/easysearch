@@ -57,7 +57,7 @@ export default function SignIn() {
       .auth()
       .signInWithEmailAndPassword(data.Email, data.Password)
       .then(() => {
-        history.push("/");
+        history.push("/home");
       })
       .catch((error) => {
         var errorCode = error.code;
