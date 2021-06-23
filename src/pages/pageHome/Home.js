@@ -100,21 +100,12 @@ export default function Home() {
         fetch(hyperlinks[x]).catch((error) => setApiSuccess(false))
       )
     );
-
-    return true;
   };
-  // gets data from firebase realtime database
-  // on successful return will save search keyword under user
 
   // to set state of which sorter to do what
   const requestSort = (key) => {
-    console.log(key);
     let direction = "ascending";
-    if (
-      sortConfig &&
-      sortConfig.key === key &&
-      sortConfig.direction === "ascending"
-    ) {
+    if (sortConfig.key === key && sortConfig.direction === "ascending") {
       direction = "descending";
     }
     setSortConfig({ key, direction });
@@ -134,46 +125,77 @@ export default function Home() {
         })
       );
     } else if (key === "store") {
-      return sortConfig.direction === "descending"
-        ? value.sort((a, b) => (a[0] < b[0] ? -1 : 1))
-        : value.sort((a, b) => (a[0] < b[0] ? 1 : -1));
+      setValue(
+        sortConfig.direction === "descending"
+          ? [...value].sort((a, b) => {
+              if (a[0] === b[0]) {
+                const priceA = a[1]["price"].substring(1);
+                const priceB = b[1]["price"].substring(1);
+                return priceA - priceB;
+              } else if (a[0] < b[0]) {
+                return -1;
+              } else {
+                return 1;
+              }
+            })
+          : [...value].sort((a, b) => {
+              if (a[0] === b[0]) {
+                const priceA = a[1]["price"].substring(1);
+                const priceB = b[1]["price"].substring(1);
+                return priceA - priceB;
+              } else if (a[0] < b[0]) {
+                return 1;
+              } else {
+                return -1;
+              }
+            })
+      );
     }
   };
 
-  const fetchData = (data) => {
+  // gets data from firebase realtime database
+  // on successful return will save search keyword under user
+  const fetchData = async (data) => {
+    // update search history even if no results
+    updateHistory(data.searchValue);
     const dbRef = firebase.database().ref("/" + data.searchValue);
-
     // function to get all the values
     // await all of them
     // process the data when they are all here
-
+    let boolean = false;
     dbRef.on("value", (snapshot) => {
       if (snapshot.exists()) {
         const dataArr = [];
+        let leftoverShops = [];
         const availableShops = [];
-
         snapshot.forEach((entry) => {
           availableShops.push(entry.key);
           entry.val().forEach((x) => dataArr.push([entry.key, x]));
         });
-        const leftoverShops = shops.filter(
+        leftoverShops = shops.filter(
           (item) => !availableShops.some((item2) => item === item2)
         );
-        if (leftoverShops.length !== 0) {
+        if (leftoverShops.length !== 0 && !boolean) {
+          boolean = true;
+          console.log("run");
           runSearchAPI(data.searchValue, leftoverShops);
-        } else {
-          setValue(dataArr);
-          setBool(true);
-          updateHistory(data.searchValue);
         }
+        setValue(dataArr);
+        console.log(boolean);
+        setBool(true);
       } else {
         runSearchAPI(data.searchValue, shops);
+        boolean = true;
       }
     });
   };
-
+  /*   useEffect(() => {
+    console.log(value);
+  }, [value]); */
   useEffect(() => {
-    if (!apiSuccess) alert("error occured in fetching api data");
+    if (!apiSuccess) {
+      console.log("error occured in fetching api data");
+    }
   }, [apiSuccess]);
 
   return (

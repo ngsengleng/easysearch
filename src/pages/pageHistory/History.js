@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import "firebase/database";
 import "firebase/firestore";
 import { firebase } from "@firebase/app";
-import { Pagination } from "@material-ui/lab";
-import { Button } from "@material-ui/core";
 import RenderHistory from "../../components/RenderHistory";
 
 const db = firebase.firestore();
