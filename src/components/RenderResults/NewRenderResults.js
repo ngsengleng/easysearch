@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { Grid } from "@material-ui/core";
 import styles from "./RenderResults.module.css";
@@ -35,10 +35,21 @@ export default function RenderResults(props) {
 }
 
 function RenderLink(props) {
-  const [inWishlist, setInWishlist] = useState();
+  //const [inWishlist, setInWishlist] = useState();
   const currentUser = firebase.auth().currentUser.uid;
   const a = db.collection("users").doc(currentUser).collection("wishlist");
-
+  const [disabled, setDisabled] = useState(false);
+  useEffect(() => {
+    const inWishlist = () => {
+      const x = a.where("items", "array-contains", props.itemData);
+      x.onSnapshot((snapshot) => {
+        snapshot.forEach((userSnapshot) => {
+          console.log(userSnapshot.data());
+        });
+      });
+    };
+    inWishlist();
+  }, [a, props.itemData]);
   const openInNewTab = (url) => {
     const newWindow = window.open(url, "_blank", "noopener,noreferrer");
     if (newWindow) newWindow.opener = null;
@@ -46,13 +57,18 @@ function RenderLink(props) {
 
   const addToWishlist = (product) => {
     a.doc("arrayOfItems").update({
-      items: firebase.firestore.FieldValue.arrayUnion(product),
+      items: firebase.firestore.FieldValue.arrayUnion({
+        store: props.store,
+        image: product.image,
+        title: product.title,
+        price: product.price,
+        url: product.url,
+        ratings: product.ratings,
+      }),
     });
   };
-  // use useeffect to load in items added to wishlist
   // then check which items on display are already in wihslist, disable the add button
   // TODO
-  // also finish the wishlist display page
   return (
     <Grid container item className={styles.itemBox}>
       <Grid item xs={1}></Grid>

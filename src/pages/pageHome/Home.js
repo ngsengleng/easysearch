@@ -13,7 +13,7 @@ import RenderResults from "../../components/RenderResults";
 import "firebase/database";
 import "firebase/firestore";
 import { firebase } from "@firebase/app";
-
+import { useLocation } from "react-router";
 const db = firebase.firestore();
 
 const useStyles = makeStyles({
@@ -37,6 +37,8 @@ const useStyles = makeStyles({
 });
 
 export default function Home() {
+  const location = useLocation();
+
   // shops in circulation
   const shops = ["ezbuy", "shopee", "amazon", "qoo10"];
   // key for helping react keep track of map variables
@@ -64,7 +66,6 @@ export default function Home() {
   // name of product is saved as the document name
   const updateHistory = (keyword) => {
     const currentUser = firebase.auth().currentUser.uid;
-    console.log(currentUser);
     var searchHistory = db
       .collection("users")
       .doc(currentUser)
@@ -177,11 +178,9 @@ export default function Home() {
         );
         if (leftoverShops.length !== 0 && !isRetrieving) {
           isRetrieving = true;
-          console.log("run");
           runSearchAPI(data.searchValue, leftoverShops);
         }
         setValue(dataArr);
-        console.log(isRetrieving);
         setBool(true);
       } else {
         runSearchAPI(data.searchValue, shops);
@@ -189,15 +188,12 @@ export default function Home() {
       }
     });
   };
-  /*   useEffect(() => {
-    console.log(value);
-  }, [value]); */
+
   useEffect(() => {
     if (!apiSuccess) {
       console.log("error occured in fetching api data");
     }
   }, [apiSuccess]);
-  console.log(value);
   return (
     <div>
       <h1 className={styles.title}>What do you want to buy today?</h1>

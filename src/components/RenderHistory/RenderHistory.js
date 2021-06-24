@@ -21,8 +21,8 @@ export default function RenderHistory({ items }) {
   const history = useHistory();
   const redirectToResults = (keyword) => {
     history.push({
-      pathname: "/home",
-      keyword: keyword,
+      pathname: "/",
+      state: { keyword: keyword },
     });
   };
   return (
