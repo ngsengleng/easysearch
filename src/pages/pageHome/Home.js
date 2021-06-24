@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Button, TextField } from "@material-ui/core";
 import { useForm, Controller } from "react-hook-form";
 import styles from "./Home.module.css";
@@ -8,11 +8,13 @@ import "firebase/firestore";
 import { firebase } from "@firebase/app";
 import ResultsHeader from "../../components/ResultsHeader";
 
+import { useLocation } from "react-router";
+
 const db = firebase.firestore();
 
 export default function Home() {
-  // shops in circulation
-  const shops = ["ezbuy", "shopee", "amazon", "qoo10"];
+  const location = useLocation();
+
   // key for helping react keep track of map variables
   var key = 0;
   const { control, handleSubmit } = useForm();
@@ -127,7 +129,9 @@ export default function Home() {
 
   // gets data from firebase realtime database
   // on successful return will save search keyword under user
-  const fetchData = async (data) => {
+  const fetchData = useCallback(async (data) => {
+    // shops in circulation
+    const shops = ["ezbuy", "shopee", "amazon", "qoo10"];
     // update search history even if no results
     updateHistory(data.searchValue);
     const dbRef = firebase.database().ref("/" + data.searchValue);
@@ -158,8 +162,12 @@ export default function Home() {
         isRetrieving = true;
       }
     });
-  };
-
+  }, []);
+  useEffect(() => {
+    if (location.state !== undefined) {
+      fetchData({ searchValue: location.state.keyword });
+    }
+  }, [location, fetchData]);
   useEffect(() => {
     if (!apiSuccess) {
       console.log("error occured in fetching api data");
