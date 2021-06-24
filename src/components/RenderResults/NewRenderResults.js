@@ -12,10 +12,29 @@ const db = firebase.firestore();
 
 // receive an array of items in format [storeName, itemDetails]
 export default function RenderResults(props) {
-  var num = 0;
+  const currentUser = firebase.auth().currentUser.uid;
+  const a = db.collection("users").doc(currentUser).collection("wishlist");
+  const [disableButton, setDisableButton] = useState(false);
+  const num = 0;
   const url = props.itemData?.url.includes("https://")
     ? props.itemData?.url
     : "https://" + props.itemData?.url;
+
+  // find out how to set the disableButton state back to false if no results present
+  useEffect(() => {
+    const newField = { store: props.store };
+    const newItemData = { ...props.itemData, ...newField };
+    const inWishlist = () => {
+      const x = a.where("items", "array-contains", newItemData);
+      x.onSnapshot((snapshot) => {
+        snapshot.forEach((userSnapshot) => {
+          setDisableButton(true);
+        });
+      });
+    };
+    inWishlist();
+  }, [a, props.itemData, props.store]);
+
   if (props.bool) {
     return (
       <Grid container justify="center" className={styles.displayGrid}>
@@ -26,6 +45,8 @@ export default function RenderResults(props) {
           url={url}
           itemData={props.itemData}
           store={props.store}
+          disable={disableButton}
+          setDisableButton={setDisableButton}
         />
       </Grid>
     );
@@ -38,18 +59,7 @@ function RenderLink(props) {
   //const [inWishlist, setInWishlist] = useState();
   const currentUser = firebase.auth().currentUser.uid;
   const a = db.collection("users").doc(currentUser).collection("wishlist");
-  const [disabled, setDisabled] = useState(false);
-  useEffect(() => {
-    const inWishlist = () => {
-      const x = a.where("items", "array-contains", props.itemData);
-      x.onSnapshot((snapshot) => {
-        snapshot.forEach((userSnapshot) => {
-          console.log(userSnapshot.data());
-        });
-      });
-    };
-    inWishlist();
-  }, [a, props.itemData]);
+
   const openInNewTab = (url) => {
     const newWindow = window.open(url, "_blank", "noopener,noreferrer");
     if (newWindow) newWindow.opener = null;
@@ -58,6 +68,20 @@ function RenderLink(props) {
   const addToWishlist = (product) => {
     a.doc("arrayOfItems").update({
       items: firebase.firestore.FieldValue.arrayUnion({
+        store: props.store,
+        image: product.image,
+        title: product.title,
+        price: product.price,
+        url: product.url,
+        ratings: product.ratings,
+      }),
+    });
+  };
+
+  const removeFromWishlist = (product) => {
+    props.setDisableButton(false);
+    a.doc("arrayOfItems").update({
+      items: firebase.firestore.FieldValue.arrayRemove({
         store: props.store,
         image: product.image,
         title: product.title,
@@ -97,14 +121,25 @@ function RenderLink(props) {
         </p>
       </Grid>
       <Grid item xs={1}>
-        <Button
-          variant="outlined"
-          color="primary"
-          style={{ color: "#212121" }}
-          onClick={() => addToWishlist(props.itemData)}
-        >
-          add
-        </Button>
+        {!props.disable ? (
+          <Button
+            variant="outlined"
+            color="primary"
+            style={{ color: "#212121" }}
+            onClick={() => addToWishlist(props.itemData)}
+          >
+            add
+          </Button>
+        ) : (
+          <Button
+            variant="outlined"
+            color="primary"
+            style={{ color: "#212121" }}
+            onClick={() => removeFromWishlist(props.itemData)}
+          >
+            remove
+          </Button>
+        )}
       </Grid>
       <Grid item xs={1}>
         <Button

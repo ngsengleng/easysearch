@@ -77,7 +77,6 @@ function AppShell() {
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                 >
-                  <MenuItem onClick={handleSignout}>My account</MenuItem>
                   <MenuItem onClick={handleSignout}>Logout</MenuItem>
                 </Menu>
               </div>
