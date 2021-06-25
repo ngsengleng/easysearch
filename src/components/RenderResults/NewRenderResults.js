@@ -24,15 +24,17 @@ export default function RenderResults(props) {
   useEffect(() => {
     const newField = { store: props.store };
     const newItemData = { ...props.itemData, ...newField };
-    const inWishlist = () => {
-      const x = a.where("items", "array-contains", newItemData);
-      x.onSnapshot((snapshot) => {
+
+    const unsubscribe = a
+      .where("items", "array-contains", newItemData)
+      .onSnapshot((snapshot) => {
         snapshot.forEach((userSnapshot) => {
           setDisableButton(true);
         });
       });
+    return () => {
+      unsubscribe();
     };
-    inWishlist();
   }, [a, props.itemData, props.store]);
 
   if (props.bool) {

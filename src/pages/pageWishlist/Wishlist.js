@@ -33,6 +33,7 @@ export default function Wishlist() {
   // fetch data from firestore on page render
   useEffect(() => {
     document.title = "wishlist";
+    let unsubscribe = "";
     const fetchWishlist = async () => {
       const currentUser = firebase.auth().currentUser.uid;
       const data = await db
@@ -40,7 +41,7 @@ export default function Wishlist() {
         .doc(currentUser)
         .collection("wishlist")
         .doc("arrayOfItems");
-      data.onSnapshot((doc) => {
+      unsubscribe = data.onSnapshot((doc) => {
         if (doc.exists) {
           setWishlist(doc.data().items);
           setBool(true);
@@ -50,6 +51,9 @@ export default function Wishlist() {
       });
     };
     fetchWishlist();
+    return () => {
+      unsubscribe();
+    };
   }, []);
   return (
     <div>
