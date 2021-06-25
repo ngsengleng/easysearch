@@ -132,7 +132,7 @@ export default function Home() {
 
   // gets data from firebase realtime database
   // on successful return will save search keyword under user
-  const fetchData = useCallback(async (data) => {
+  const fetchData = useCallback((data) => {
     // shops in circulation
     const shops = ["ezbuy", "shopee", "amazon", "qoo10"];
     // update search history even if no results

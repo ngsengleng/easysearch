@@ -1,7 +1,6 @@
 import React from "react";
 import Carousel from "react-material-ui-carousel";
 import {
-  Button,
   makeStyles,
   Card,
   CardMedia,
@@ -9,6 +8,8 @@ import {
   CardContent,
   Typography,
 } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
+
 import tech from "../../photos/tech.jpeg";
 import home from "../../photos/home.jpeg";
 import beauty from "../../photos/beauty.jpeg";
@@ -18,6 +19,7 @@ const useStyles = makeStyles({
   root: {
     margin: "auto",
     maxWidth: "30%",
+    paddingTop: "10px",
   },
 
   item: {
@@ -38,22 +40,27 @@ export default function TrendingCarousel() {
     {
       image: tech,
       name: "Technology",
+      key: "Technology",
     },
     {
       image: home,
       name: "Home & Health",
+      key: "Health, Household & Personal Care",
     },
     {
       image: beauty,
       name: "Beauty",
+      key: "Beauty",
     },
     {
       image: fashion,
       name: "Fashion",
+      key: "Fashion",
     },
     {
       image: food,
       name: "Food",
+      key: "Food",
     },
   ];
 
@@ -67,9 +74,14 @@ export default function TrendingCarousel() {
 }
 
 function Item({ item }) {
+  const history = useHistory();
+
   const classes = useStyles();
   return (
-    <Card className={classes.item}>
+    <Card
+      className={classes.item}
+      onClick={() => history.push({ pathname: "/trending", keyword: item.key })}
+    >
       <CardActionArea>
         <CardContent>
           <Typography
@@ -85,9 +97,9 @@ function Item({ item }) {
           <img src={item.image} alt="house" width="200px" height="150px"></img>
         </CardMedia>
         <CardContent>
-          <Button variant="outlined" className="CheckButton">
+          <Typography variant="button">
             Trending {item.name} Products
-          </Button>
+          </Typography>
         </CardContent>
       </CardActionArea>
     </Card>

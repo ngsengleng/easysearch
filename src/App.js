@@ -16,6 +16,7 @@ import Home from "./pages/pageHome";
 import History from "./pages/pageHistory";
 import Login from "./pages/pageLogin";
 import Signup from "./pages/pageSignup";
+import Trending from "./pages/pageTrending";
 import Wishlist from "./pages/pageWishlist";
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
@@ -34,6 +35,10 @@ export default function App() {
 
                 <Route path="/wishlist">
                   <Wishlist />
+                </Route>
+
+                <Route path="/trending">
+                  <Trending />
                 </Route>
 
                 <Route exact path="/">
