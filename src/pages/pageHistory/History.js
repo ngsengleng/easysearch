@@ -26,7 +26,7 @@ export default function History() {
 
   useEffect(() => {
     // correct way to set title is with react-helmet (its a library, go look it up)
-    document.title = "history";
+    document.title = "History";
 
     const fetchSearchHistory = async () => {
       const currentUser = firebase.auth().currentUser.uid;

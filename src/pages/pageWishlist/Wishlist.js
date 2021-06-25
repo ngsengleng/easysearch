@@ -32,7 +32,7 @@ export default function Wishlist() {
   const goToHome = () => history.push("/");
   // fetch data from firestore on page render
   useEffect(() => {
-    document.title = "wishlist";
+    document.title = "Wishlist";
     let unsubscribe = "";
     const fetchWishlist = async () => {
       const currentUser = firebase.auth().currentUser.uid;

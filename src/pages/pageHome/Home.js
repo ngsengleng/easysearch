@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useCallback } from "react";
+import styles from "./Home.module.css";
+
 import { Button, TextField } from "@material-ui/core";
 import { useForm, Controller } from "react-hook-form";
-import styles from "./Home.module.css";
-import RenderResults from "../../components/RenderResults";
+import { useLocation } from "react-router";
+
 import "firebase/database";
 import "firebase/firestore";
 import { firebase } from "@firebase/app";
-import ResultsHeader from "../../components/ResultsHeader";
 
-import { useLocation } from "react-router";
+import ResultsHeader from "../../components/ResultsHeader";
+import RenderResults from "../../components/RenderResults";
+import TrendingCarousel from "../../components/TrendingCarousel";
 
 const db = firebase.firestore();
 
@@ -175,6 +178,7 @@ export default function Home() {
   }, [apiSuccess]);
   return (
     <div>
+      <TrendingCarousel />
       <h1 className={styles.title}>What do you want to buy today?</h1>
       <form className={styles.home} onSubmit={handleSubmit(onSubmit)}>
         <Controller
