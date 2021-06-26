@@ -50,7 +50,7 @@ export default function ResultsHeader({ sortConfig, sortResults }) {
             className={classes.sortButton}
             onClick={() => sortResults("price")}
           >
-            price {sortConfig.key === "price" && sortConfig.direction}
+            price {sortConfig["price"]}
           </Button>
         </Grid>
         <Grid item xs={2}>
@@ -59,7 +59,7 @@ export default function ResultsHeader({ sortConfig, sortResults }) {
             className={classes.sortButton}
             onClick={() => sortResults("store")}
           >
-            store {sortConfig.key === "store" && sortConfig.direction}
+            store {sortConfig["store"]}
           </Button>
         </Grid>
         <Grid item xs={1} className={classes.headerText}>

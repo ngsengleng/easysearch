@@ -14,7 +14,7 @@ const db = firebase.firestore();
 export default function RenderResults(props) {
   const currentUser = firebase.auth().currentUser.uid;
   const a = db.collection("users").doc(currentUser).collection("wishlist");
-  const [disableButton, setDisableButton] = useState(false);
+  const [disableButton, setDisableButton] = useState();
   const num = 0;
   const url = props.itemData?.url.includes("https://")
     ? props.itemData?.url
@@ -96,13 +96,15 @@ function RenderLink(props) {
   // then check which items on display are already in wihslist, disable the add button
   // TODO
   return (
-    <Grid container item className={styles.itemBox}>
+    <Grid container item>
       <Grid item xs={1}></Grid>
       <Grid item xs={2}>
         <img
           className={styles.photo}
           src={props.itemData?.image}
           alt="product"
+          width="200px"
+          height="200px"
         />
       </Grid>
       <Grid item xs={1}>

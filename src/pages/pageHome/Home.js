@@ -24,13 +24,14 @@ export default function Home() {
   const [value, setValue] = useState([]);
   const [bool, setBool] = useState(false);
   const [apiSuccess, setApiSuccess] = useState(true);
-
+  const [disableButton, setDisableButton] = useState();
   const [sortConfig, setSortConfig] = useState({
-    key: "price",
-    direction: null,
+    price: "ascending",
+    store: "ascending",
   });
 
   const onSubmit = (keyword) => {
+    setDisableButton(false);
     fetchData(keyword);
   };
 
@@ -81,11 +82,11 @@ export default function Home() {
 
   // to set state of which sorter to do what
   const requestSort = (key) => {
-    let direction = "ascending";
-    if (sortConfig.key === key && sortConfig.direction === "ascending") {
-      direction = "descending";
+    if (sortConfig[key] === "ascending") {
+      setSortConfig({ ...sortConfig, [key]: "descending" });
+    } else {
+      setSortConfig({ ...sortConfig, [key]: "ascending" });
     }
-    setSortConfig({ key, direction });
   };
 
   // function to sort returned results
@@ -96,14 +97,14 @@ export default function Home() {
         [...value].sort((a, b) => {
           const priceA = a[1]["price"].substring(1);
           const priceB = b[1]["price"].substring(1);
-          return sortConfig.direction === "descending"
+          return sortConfig[key] === "descending"
             ? priceA - priceB
             : priceB - priceA;
         })
       );
     } else if (key === "store") {
       setValue(
-        sortConfig.direction === "descending"
+        sortConfig[key] === "descending"
           ? [...value].sort((a, b) => {
               if (a[0] === b[0]) {
                 const priceA = a[1]["price"].substring(1);
@@ -213,6 +214,7 @@ export default function Home() {
         key += 1;
         return (
           <RenderResults
+            disableButton={disableButton}
             key={key}
             itemData={entry[1]}
             bool={bool}
