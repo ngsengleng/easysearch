@@ -5,7 +5,7 @@ import "firebase/firestore";
 import { firebase } from "@firebase/app";
 import { Typography, makeStyles, Link } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
-import WishlistHeader from "../../components/WishlistHeader";
+import GeneralHeader from "../../components/GeneralHeader";
 
 const db = firebase.firestore();
 
@@ -65,7 +65,7 @@ export default function Wishlist() {
       >
         Wishlist
       </Typography>
-      <WishlistHeader />
+      <GeneralHeader />
       {wishlist === undefined || wishlist.length === 0 ? (
         <div>
           <Typography
