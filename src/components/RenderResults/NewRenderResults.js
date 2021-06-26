@@ -61,14 +61,33 @@ function RenderLink(props) {
   //const [inWishlist, setInWishlist] = useState();
   const currentUser = firebase.auth().currentUser.uid;
   const a = db.collection("users").doc(currentUser).collection("wishlist");
-
   const openInNewTab = (url) => {
     const newWindow = window.open(url, "_blank", "noopener,noreferrer");
     if (newWindow) newWindow.opener = null;
   };
 
   const addToWishlist = (product) => {
-    a.doc("arrayOfItems").update({
+    const unsubscribe = a.get().then((doc) => {
+      if (!doc.exists) {
+        a.doc("arrayOfItems").set(
+          {
+            items: firebase.firestore.FieldValue.arrayUnion({
+              store: props.store,
+              image: product.image,
+              title: product.title,
+              price: product.price,
+              url: product.url,
+              ratings: product.ratings,
+            }),
+          },
+          { merge: true }
+        );
+      }
+      return () => {
+        unsubscribe();
+      };
+    });
+    /* a.doc("arrayOfItems").update({
       items: firebase.firestore.FieldValue.arrayUnion({
         store: props.store,
         image: product.image,
@@ -77,7 +96,7 @@ function RenderLink(props) {
         url: product.url,
         ratings: product.ratings,
       }),
-    });
+    }); */
   };
 
   const removeFromWishlist = (product) => {
@@ -96,7 +115,7 @@ function RenderLink(props) {
   // then check which items on display are already in wihslist, disable the add button
   // TODO
   return (
-    <Grid container item>
+    <Grid container item c>
       <Grid item xs={1}></Grid>
       <Grid item xs={2}>
         <img
