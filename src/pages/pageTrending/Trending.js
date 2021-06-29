@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Typography, Divider, makeStyles } from "@material-ui/core";
-import RenderResults from "../../components/RenderResults/NewRenderResults";
+import RenderResults from "../../components/RenderResults";
 import TrendingCarousel from "../../components/TrendingCarousel";
 import GeneralHeader from "../../components/GeneralHeader";
 

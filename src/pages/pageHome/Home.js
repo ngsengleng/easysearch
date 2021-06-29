@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import styles from "./Home.module.css";
 
 import { Button, TextField } from "@material-ui/core";
 import { useForm, Controller } from "react-hook-form";
@@ -9,13 +8,38 @@ import "firebase/database";
 import "firebase/firestore";
 import { firebase } from "@firebase/app";
 
+import { Typography, makeStyles } from "@material-ui/core";
+
 import ResultsHeader from "../../components/ResultsHeader";
 import RenderResults from "../../components/RenderResults";
 import TrendingCarousel from "../../components/TrendingCarousel";
 
 const db = firebase.firestore();
 
+const useStyles = makeStyles({
+  title: {
+    justifyContent: "center",
+    textAlign: "center",
+    display: "flex",
+    marginBottom: "5px",
+  },
+
+  searchBox: {
+    width: "50%",
+    alignSelf: "center",
+    paddingRight: "1rem",
+    paddingBottom: "1rem",
+  },
+
+  searchComponents: {
+    justifyContent: "center",
+    alignContent: "center",
+    textAlign: "center",
+    flexDirection: "column",
+  },
+});
 export default function Home() {
+  const classes = useStyles();
   const location = useLocation();
 
   // key for helping react keep track of map variables
@@ -177,18 +201,24 @@ export default function Home() {
       console.log("error occured in fetching api data");
     }
   }, [apiSuccess]);
+
   return (
     <div>
       <TrendingCarousel />
-      <h1 className={styles.title}>What do you want to buy today?</h1>
-      <form className={styles.home} onSubmit={handleSubmit(onSubmit)}>
+      <Typography variant="h4" className={classes.title}>
+        What do you want to buy today?
+      </Typography>
+      <form
+        className={classes.searchComponents}
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <Controller
           name="searchValue"
           control={control}
           defaultValue=""
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <TextField
-              className={styles.searchBox}
+              className={classes.searchBox}
               variant="outlined"
               label="Search an item..."
               size="small"
@@ -200,12 +230,7 @@ export default function Home() {
           )}
           rules={{ required: "Please type something" }}
         />
-        <Button
-          variant="contained"
-          color="primary"
-          className={styles.searchButton}
-          type="submit"
-        >
+        <Button variant="contained" color="primary" type="submit">
           Search
         </Button>
       </form>

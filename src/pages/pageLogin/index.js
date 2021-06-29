@@ -1,2 +1,2 @@
-import Login from "./NewLogin";
+import Login from "./Login";
 export default Login;

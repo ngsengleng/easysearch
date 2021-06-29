@@ -5,15 +5,21 @@ import {
   Typography,
   Menu,
   MenuItem,
+  makeStyles,
 } from "@material-ui/core";
 import { FirebaseAuthConsumer, IfFirebaseAuthed } from "@react-firebase/auth";
 import { firebase } from "@firebase/app";
 import "@firebase/auth";
-import styles from "./AppShell.module.css";
 import React, { useState } from "react";
 import { useHistory, withRouter } from "react-router-dom";
 
+const useStyles = makeStyles({
+  title: {
+    flexGrow: "1",
+  },
+});
 function AppShell() {
+  const classes = useStyles();
   const history = useHistory();
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -34,7 +40,7 @@ function AppShell() {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Typography variant="h5" className={styles.title}>
+        <Typography variant="h5" className={classes.title}>
           EasySearch
         </Typography>
         <FirebaseAuthConsumer>
