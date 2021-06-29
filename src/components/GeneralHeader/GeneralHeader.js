@@ -15,10 +15,7 @@ const useStyles = makeStyles({
 
   resultHeader: {
     paddingTop: "5px",
-  },
-
-  pageHeader: {
-    margin: "auto",
+    textAlign: "center",
   },
 });
 
@@ -40,53 +37,53 @@ export default function WishlistHeader() {
       <Grid container className={classes.resultHeader}>
         <Grid item xs={width < lg ? 0 : 1}></Grid>
 
-        <Grid item xs={2} className={classes.headerText}>
+        <Grid item xs={2}>
           <Typography variant="button" display="block" gutterBottom>
             IMAGE
           </Typography>
         </Grid>
 
         {width < lg ? (
-          <Grid item xs={2} className={classes.headerText}>
+          <Grid item xs={2}>
             <Typography variant="button" display="block" gutterBottom>
               ITEM
             </Typography>
           </Grid>
         ) : (
-          <Grid item xs={3} className={classes.headerText}>
+          <Grid item xs={3}>
             <Typography variant="button" display="block" gutterBottom>
               ITEM NAME
             </Typography>
           </Grid>
         )}
 
-        <Grid item xs={2}>
+        <Grid item xs={width < lg ? 2 : 1}>
           <Typography variant="button" display="block" gutterBottom>
             price
           </Typography>
         </Grid>
 
-        <Grid item xs={2}>
+        <Grid item xs={width < lg ? 2 : 1}>
           <Typography variant="button" display="block" gutterBottom>
             store
           </Typography>
         </Grid>
 
         {width < sm ? null : (
-          <Grid item xs={1} className={classes.headerText}>
+          <Grid item xs={1}>
             <Typography variant="button" display="block" gutterBottom>
               RATING
             </Typography>
           </Grid>
         )}
 
-        <Grid item xs={width < sm ? 2 : 1} className={classes.headerText}>
+        <Grid item xs={width < sm ? 2 : 1}>
           <Typography variant="button" display="block" gutterBottom>
             WISHLIST
           </Typography>
         </Grid>
 
-        <Grid item xs={width < xs ? 2 : 1} className={classes.headerText}>
+        <Grid item xs={width < xs ? 2 : 1}>
           {width < lg ? (
             <LinkIcon />
           ) : (
