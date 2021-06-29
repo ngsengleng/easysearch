@@ -57,14 +57,12 @@ export default function Home() {
   const [value, setValue] = useState([]);
   const [bool, setBool] = useState(false);
   const [apiSuccess, setApiSuccess] = useState(true);
-  const [disableButton, setDisableButton] = useState();
   const [sortConfig, setSortConfig] = useState({
     price: "ascending",
     store: "ascending",
   });
 
   const onSubmit = (keyword) => {
-    setDisableButton(false);
     fetchData(keyword);
   };
 
@@ -166,8 +164,8 @@ export default function Home() {
     // shops in circulation
     const shops = ["ezbuy", "shopee", "amazon", "qoo10"];
     // update search history even if no results
-    updateHistory(data.searchValue);
-    const dbRef = firebase.database().ref("/" + data.searchValue);
+    updateHistory(data.searchValue.toLowerCase());
+    const dbRef = firebase.database().ref("/" + data.searchValue.toLowerCase());
     // function to get all the values
     // await all of them
     // process the data when they are all here
@@ -259,7 +257,6 @@ export default function Home() {
         key += 1;
         return (
           <RenderResults
-            disableButton={disableButton}
             key={key}
             itemData={entry[1]}
             bool={bool}
