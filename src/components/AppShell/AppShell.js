@@ -6,11 +6,18 @@ import {
   Menu,
   MenuItem,
   makeStyles,
+  IconButton,
 } from "@material-ui/core";
+
+import HomeIcon from "@material-ui/icons/Home";
+import HistoryIcon from "@material-ui/icons/History";
+import BookmarkIcon from "@material-ui/icons/Bookmark";
+import PersonIcon from "@material-ui/icons/Person";
+
 import { FirebaseAuthConsumer, IfFirebaseAuthed } from "@react-firebase/auth";
 import { firebase } from "@firebase/app";
 import "@firebase/auth";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory, withRouter } from "react-router-dom";
 
 const useStyles = makeStyles({
@@ -19,6 +26,17 @@ const useStyles = makeStyles({
   },
 });
 function AppShell() {
+  const [width, setWidth] = useState(window.innerWidth);
+  const breakpoint = 500;
+
+  useEffect(() => {
+    const handleWindowResize = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handleWindowResize);
+
+    // Return a function from the effect that removes the event listener
+    return () => window.removeEventListener("resize", handleWindowResize);
+  }, []);
+
   const classes = useStyles();
   const history = useHistory();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -47,35 +65,70 @@ function AppShell() {
           <IfFirebaseAuthed>
             {() => (
               <div>
-                <Button
-                  color="inherit"
-                  aria-describedby="home"
-                  onClick={() => history.push("/")}
-                >
-                  home
-                </Button>
-                <Button
-                  color="inherit"
-                  aria-describedby="search-history"
-                  onClick={() => history.push("/history")}
-                >
-                  history
-                </Button>
-                <Button
-                  color="inherit"
-                  aria-describedby="wishlist"
-                  onClick={() => history.push("/wishlist")}
-                >
-                  wishlist
-                </Button>
-                <Button
-                  color="inherit"
-                  aria-controls="simple-menu"
-                  aria-haspopup="true"
-                  onClick={handleClick}
-                >
-                  User
-                </Button>
+                {width < breakpoint ? (
+                  <>
+                    <IconButton
+                      color="inherit"
+                      onClick={() => history.push("/")}
+                    >
+                      <HomeIcon />
+                    </IconButton>
+                    <IconButton
+                      color="inherit"
+                      aria-describedby="search-history"
+                      onClick={() => history.push("/history")}
+                    >
+                      <HistoryIcon />
+                    </IconButton>
+                    <IconButton
+                      color="inherit"
+                      aria-describedby="search-history"
+                      onClick={() => history.push("/wishlist")}
+                    >
+                      <BookmarkIcon />
+                    </IconButton>
+                    <IconButton
+                      color="inherit"
+                      aria-controls="simple-menu"
+                      aria-haspopup="true"
+                      onClick={handleClick}
+                    >
+                      <PersonIcon />
+                    </IconButton>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      color="inherit"
+                      aria-describedby="home"
+                      onClick={() => history.push("/")}
+                    >
+                      home
+                    </Button>
+                    <Button
+                      color="inherit"
+                      aria-describedby="search-history"
+                      onClick={() => history.push("/history")}
+                    >
+                      history
+                    </Button>
+                    <Button
+                      color="inherit"
+                      aria-describedby="wishlist"
+                      onClick={() => history.push("/wishlist")}
+                    >
+                      wishlist
+                    </Button>
+                    <Button
+                      color="inherit"
+                      aria-controls="simple-menu"
+                      aria-haspopup="true"
+                      onClick={handleClick}
+                    >
+                      User
+                    </Button>
+                  </>
+                )}
                 <Menu
                   id="simple-menu"
                   anchorEl={anchorEl}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Grid,
@@ -6,12 +6,15 @@ import {
   Typography,
   makeStyles,
 } from "@material-ui/core";
+import LinkIcon from "@material-ui/icons/Link";
 
 const useStyles = makeStyles({
   sortButton: {
     color: "#212121",
     backgroundColor: "#80d8ff",
   },
+
+  buttonGrid: { textAlign: "center" },
 
   divider: {
     height: "5px",
@@ -24,58 +27,94 @@ const useStyles = makeStyles({
 
   headerText: {
     padding: "5px",
+    textAlign: "center",
+    alignItems: "center",
   },
 });
 
 export default function ResultsHeader({ sortConfig, sortResults }) {
   const classes = useStyles();
+
+  const [width, setWidth] = useState(window.innerWidth);
+  const lg = 1000;
+  const sm = 750;
+  const xs = 400;
+  useEffect(() => {
+    const handleWindowResize = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handleWindowResize);
+
+    // Return a function from the effect that removes the event listener
+    return () => window.removeEventListener("resize", handleWindowResize);
+  }, []);
+
   return (
     <div>
       <Grid container className={classes.resultHeader}>
-        <Grid item xs={1}></Grid>
+        <Grid item xs={width < lg ? 0 : 1}></Grid>
+
         <Grid item xs={2} className={classes.headerText}>
           <Typography variant="button" display="block" gutterBottom>
             IMAGE
           </Typography>
         </Grid>
-        <Grid item xs={1} className={classes.headerText}>
-          <Typography variant="button" display="block" gutterBottom>
-            ITEM NAME
-          </Typography>
-        </Grid>
-        <Grid item xs={2}>
+
+        {width < lg ? (
+          <Grid item xs={2} className={classes.headerText}>
+            <Typography variant="button" display="block" gutterBottom>
+              ITEM
+            </Typography>
+          </Grid>
+        ) : (
+          <Grid item xs={3} className={classes.headerText}>
+            <Typography variant="button" display="block" gutterBottom>
+              ITEM NAME
+            </Typography>
+          </Grid>
+        )}
+
+        <Grid item xs={width < lg ? 2 : 1} className={classes.buttonGrid}>
           <Button
             size="medium"
             color="primary"
             className={classes.sortButton}
             onClick={() => sortResults("price")}
           >
-            price {sortConfig["price"]}
+            price {sortConfig["price"] === "ascending" ? "↑" : "↓"}
           </Button>
         </Grid>
-        <Grid item xs={2}>
+
+        <Grid item xs={width < lg ? 2 : 1} className={classes.buttonGrid}>
           <Button
             size="medium"
             className={classes.sortButton}
             onClick={() => sortResults("store")}
           >
-            store {sortConfig["store"]}
+            store {sortConfig["store"] === "ascending" ? "↑" : "↓"}
           </Button>
         </Grid>
-        <Grid item xs={1} className={classes.headerText}>
-          <Typography variant="button" display="block" gutterBottom>
-            RATING
-          </Typography>
-        </Grid>
-        <Grid item xs={1} className={classes.headerText}>
+
+        {width < sm ? null : (
+          <Grid item xs={1} className={classes.headerText}>
+            <Typography variant="button" display="block" gutterBottom>
+              RATING
+            </Typography>
+          </Grid>
+        )}
+
+        <Grid item xs={width < sm ? 2 : 1} className={classes.headerText}>
           <Typography variant="button" display="block" gutterBottom>
             WISHLIST
           </Typography>
         </Grid>
-        <Grid item xs={1} className={classes.headerText}>
-          <Typography variant="button" display="block" gutterBottom>
-            LINK TO SITE
-          </Typography>
+
+        <Grid item xs={width < xs ? 2 : 1} className={classes.headerText}>
+          {width < lg ? (
+            <LinkIcon />
+          ) : (
+            <Typography variant="button" display="block" gutterBottom>
+              link to site
+            </Typography>
+          )}
         </Grid>
       </Grid>
       <Divider className={classes.divider} />

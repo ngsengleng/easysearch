@@ -7,26 +7,34 @@ import { Typography, makeStyles, Paper, Divider } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
 const db = firebase.firestore();
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   title: {
     margin: "auto",
     textAlign: "center",
   },
   tableBox: {
-    width: "50%",
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+    },
+    [theme.breakpoints.up("sm")]: {
+      width: "50%",
+    },
     margin: "auto",
     marginTop: "50px",
   },
-});
+}));
 export default function History() {
   const classes = useStyles();
   const [searchHistory, setSearchHistory] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-
+  const [width, setWidth] = useState(window.innerWidth);
+  const breakpoint = 750;
   useEffect(() => {
     // correct way to set title is with react-helmet (its a library, go look it up)
     document.title = "History";
+    const handleWindowResize = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handleWindowResize);
 
     const fetchSearchHistory = async () => {
       const currentUser = firebase.auth().currentUser.uid;
@@ -41,6 +49,7 @@ export default function History() {
     };
 
     fetchSearchHistory();
+    return () => window.removeEventListener("resize", handleWindowResize);
   }, []);
 
   const handleChange = (e, value) => {
@@ -53,13 +62,24 @@ export default function History() {
   return (
     <div>
       <Paper className={classes.tableBox}>
-        <Typography variant="h4" className={classes.title}>
-          Showing {indexOfFirstItem + 1} -{" "}
-          {indexOfLastItem > searchHistory.length
-            ? searchHistory.length
-            : indexOfLastItem}{" "}
-          of {searchHistory.length} items
-        </Typography>
+        {width < breakpoint ? (
+          <Typography variant="h6" className={classes.title}>
+            Showing {indexOfFirstItem + 1} -{" "}
+            {indexOfLastItem > searchHistory.length
+              ? searchHistory.length
+              : indexOfLastItem}{" "}
+            of {searchHistory.length} items
+          </Typography>
+        ) : (
+          <Typography variant="h4" className={classes.title}>
+            Showing {indexOfFirstItem + 1} -{" "}
+            {indexOfLastItem > searchHistory.length
+              ? searchHistory.length
+              : indexOfLastItem}{" "}
+            of {searchHistory.length} items
+          </Typography>
+        )}
+
         <Divider />
         <RenderHistory items={currentItems} />
         <Pagination

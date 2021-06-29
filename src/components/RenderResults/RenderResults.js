@@ -1,18 +1,40 @@
 import React, { useState, useEffect } from "react";
 
-import { Grid, Button, makeStyles } from "@material-ui/core";
-
+import {
+  Grid,
+  Button,
+  makeStyles,
+  Typography,
+  IconButton,
+} from "@material-ui/core";
+import AddBoxRoundedIcon from "@material-ui/icons/AddBoxRounded";
+import IndeterminateCheckBoxIcon from "@material-ui/icons/IndeterminateCheckBox";
+import ExitToAppRoundedIcon from "@material-ui/icons/ExitToAppRounded";
 import "firebase/database";
 import "firebase/firestore";
 import { firebase } from "@firebase/app";
 
 const db = firebase.firestore();
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   displayGrid: {
     marginTop: "10px",
+    textAlign: "center",
+    justify: "center",
   },
-});
+
+  image: {
+    width: "70%",
+    height: "auto",
+    maxHeight: "250px",
+  },
+
+  title: {
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "0.5rem",
+    },
+  },
+}));
 // receive an array of items in format [storeName, itemDetails]
 export default function RenderResults(props) {
   const classes = useStyles();
@@ -43,7 +65,7 @@ export default function RenderResults(props) {
 
   if (props.bool) {
     return (
-      <Grid container justify="center" className={classes.displayGrid}>
+      <Grid container className={classes.displayGrid}>
         <RenderLink
           name={props.name}
           key={num}
@@ -62,13 +84,16 @@ export default function RenderResults(props) {
 }
 
 function RenderLink(props) {
-  //const [inWishlist, setInWishlist] = useState();
+  const classes = useStyles();
   const currentUser = firebase.auth().currentUser.uid;
   const a = db.collection("users").doc(currentUser).collection("wishlist");
   const openInNewTab = (url) => {
     const newWindow = window.open(url, "_blank", "noopener,noreferrer");
     if (newWindow) newWindow.opener = null;
   };
+  const [width, setWidth] = useState(window.innerWidth);
+  const lg = 1000;
+  const sm = 750;
 
   const addToWishlist = (product) => {
     const unsubscribe = a.get().then((doc) => {
@@ -91,16 +116,6 @@ function RenderLink(props) {
         unsubscribe();
       };
     });
-    /* a.doc("arrayOfItems").update({
-      items: firebase.firestore.FieldValue.arrayUnion({
-        store: props.store,
-        image: product.image,
-        title: product.title,
-        price: product.price,
-        url: product.url,
-        ratings: product.ratings,
-      }),
-    }); */
   };
 
   const removeFromWishlist = (product) => {
@@ -116,66 +131,96 @@ function RenderLink(props) {
       }),
     });
   };
-  // then check which items on display are already in wihslist, disable the add button
-  // TODO
+  useEffect(() => {
+    const handleWindowResize = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handleWindowResize);
+
+    // Return a function from the effect that removes the event listener
+    return () => window.removeEventListener("resize", handleWindowResize);
+  }, []);
+
   return (
-    <Grid container item c>
-      <Grid item xs={1}></Grid>
+    <Grid container item>
+      <Grid item xs={width < lg ? 0 : 1}></Grid>
+
       <Grid item xs={2}>
         <img
           src={props.itemData?.image}
           alt="product"
-          width="200px"
-          height="200px"
+          className={classes.image}
         />
       </Grid>
-      <Grid item xs={1}>
-        <p>{props.itemData?.title}</p>
+
+      <Grid item xs={width < lg ? 2 : 3}>
+        <Typography
+          variant="body2"
+          display="block"
+          gutterBottom
+          className={classes.title}
+        >
+          {props.itemData?.title}
+        </Typography>
       </Grid>
-      <Grid item xs={2}>
+
+      <Grid item xs={width < lg ? 2 : 1}>
         <p>{props.itemData?.price}</p>
       </Grid>
-      <Grid item xs={2}>
+
+      <Grid item xs={width < lg ? 2 : 1}>
         <p>{props.store}</p>
       </Grid>
-      <Grid item xs={1}>
-        <p>
-          {props.itemData?.ratings === undefined
-            ? "NA"
-            : props.itemData.ratings}{" "}
-          out of 5
-        </p>
-      </Grid>
-      <Grid item xs={1}>
+
+      {width < sm ? null : (
+        <Grid item xs={1}>
+          <p>
+            {props.itemData?.ratings === undefined
+              ? "NA"
+              : props.itemData.ratings}{" "}
+            out of 5
+          </p>
+        </Grid>
+      )}
+
+      <Grid item xs={width < sm ? 2 : 1}>
         {!props.disable ? (
-          <Button
-            variant="outlined"
+          <IconButton
             color="primary"
             style={{ color: "#212121" }}
             onClick={() => addToWishlist(props.itemData)}
           >
-            add
-          </Button>
+            <AddBoxRoundedIcon />
+          </IconButton>
         ) : (
-          <Button
+          <IconButton
             variant="outlined"
             color="primary"
             style={{ color: "#212121" }}
             onClick={() => removeFromWishlist(props.itemData)}
           >
-            remove
-          </Button>
+            <IndeterminateCheckBoxIcon />
+          </IconButton>
         )}
       </Grid>
-      <Grid item xs={1}>
-        <Button
-          variant="outlined"
-          color="primary"
-          style={{ color: "#212121" }}
-          onClick={() => openInNewTab(props.url)}
-        >
-          Go to site
-        </Button>
+      <Grid item xs={width < sm ? 2 : 1}>
+        {width < lg ? (
+          <IconButton
+            variant="outlined"
+            color="primary"
+            style={{ color: "#212121" }}
+            onClick={() => openInNewTab(props.url)}
+          >
+            <ExitToAppRoundedIcon />
+          </IconButton>
+        ) : (
+          <Button
+            variant="outlined"
+            color="primary"
+            style={{ color: "#212121" }}
+            onClick={() => openInNewTab(props.url)}
+          >
+            go to site
+          </Button>
+        )}
       </Grid>
     </Grid>
   );

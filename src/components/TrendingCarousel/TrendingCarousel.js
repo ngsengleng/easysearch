@@ -15,10 +15,18 @@ import home from "../../photos/home.jpeg";
 import beauty from "../../photos/beauty.jpeg";
 import fashion from "../../photos/fashion.jpeg";
 import food from "../../photos/food.jpeg";
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",
-    maxWidth: "30%",
+    [theme.breakpoints.down("sm")]: {
+      maxWidth: "100%",
+    },
+    [theme.breakpoints.up("sm")]: {
+      maxWidth: "50%",
+    },
+    [theme.breakpoints.up("md")]: {
+      maxWidth: "30%",
+    },
     paddingTop: "10px",
   },
 
@@ -32,7 +40,11 @@ const useStyles = makeStyles({
     display: "flex",
     justifyContent: "center",
   },
-});
+
+  text: {
+    paddingBottom: "10px",
+  },
+}));
 
 export default function TrendingCarousel() {
   const classes = useStyles();
@@ -97,8 +109,8 @@ function Item({ item }) {
           <img src={item.image} alt="house" width="200px" height="150px"></img>
         </CardMedia>
         <CardContent>
-          <Typography variant="button">
-            Trending {item.name} Products
+          <Typography variant="button" className={classes.text}>
+            Trending Products
           </Typography>
         </CardContent>
       </CardActionArea>

@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Typography, Grid, makeStyles, Divider } from "@material-ui/core";
+import LinkIcon from "@material-ui/icons/Link";
 
 const useStyles = makeStyles({
   sortButton: {
@@ -22,45 +23,77 @@ const useStyles = makeStyles({
 });
 
 export default function WishlistHeader() {
+  const [width, setWidth] = useState(window.innerWidth);
+  const lg = 1000;
+  const sm = 750;
+  const xs = 400;
+  useEffect(() => {
+    const handleWindowResize = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handleWindowResize);
+
+    // Return a function from the effect that removes the event listener
+    return () => window.removeEventListener("resize", handleWindowResize);
+  }, []);
   const classes = useStyles();
   return (
     <div>
       <Grid container className={classes.resultHeader}>
-        <Grid item xs={1}></Grid>
+        <Grid item xs={width < lg ? 0 : 1}></Grid>
+
         <Grid item xs={2} className={classes.headerText}>
           <Typography variant="button" display="block" gutterBottom>
             IMAGE
           </Typography>
         </Grid>
-        <Grid item xs={1} className={classes.headerText}>
-          <Typography variant="button" display="block" gutterBottom>
-            ITEM NAME
-          </Typography>
-        </Grid>
+
+        {width < lg ? (
+          <Grid item xs={2} className={classes.headerText}>
+            <Typography variant="button" display="block" gutterBottom>
+              ITEM
+            </Typography>
+          </Grid>
+        ) : (
+          <Grid item xs={3} className={classes.headerText}>
+            <Typography variant="button" display="block" gutterBottom>
+              ITEM NAME
+            </Typography>
+          </Grid>
+        )}
+
         <Grid item xs={2}>
           <Typography variant="button" display="block" gutterBottom>
             price
           </Typography>
         </Grid>
+
         <Grid item xs={2}>
           <Typography variant="button" display="block" gutterBottom>
             store
           </Typography>
         </Grid>
-        <Grid item xs={1} className={classes.headerText}>
-          <Typography variant="button" display="block" gutterBottom>
-            RATING
-          </Typography>
-        </Grid>
-        <Grid item xs={1} className={classes.headerText}>
+
+        {width < sm ? null : (
+          <Grid item xs={1} className={classes.headerText}>
+            <Typography variant="button" display="block" gutterBottom>
+              RATING
+            </Typography>
+          </Grid>
+        )}
+
+        <Grid item xs={width < sm ? 2 : 1} className={classes.headerText}>
           <Typography variant="button" display="block" gutterBottom>
             WISHLIST
           </Typography>
         </Grid>
-        <Grid item xs={1} className={classes.headerText}>
-          <Typography variant="button" display="block" gutterBottom>
-            LINK TO SITE
-          </Typography>
+
+        <Grid item xs={width < xs ? 2 : 1} className={classes.headerText}>
+          {width < lg ? (
+            <LinkIcon />
+          ) : (
+            <Typography variant="button" display="block" gutterBottom>
+              link to site
+            </Typography>
+          )}
         </Grid>
       </Grid>
       <Divider className={classes.divider} />

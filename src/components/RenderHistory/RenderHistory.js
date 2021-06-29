@@ -5,8 +5,10 @@ import {
   ListItemText,
   makeStyles,
   ListItemSecondaryAction,
-  Button,
+  IconButton,
 } from "@material-ui/core";
+import LinkIcon from "@material-ui/icons/Link";
+
 import { useHistory } from "react-router-dom";
 import moment from "moment";
 const useStyles = makeStyles({
@@ -34,7 +36,9 @@ export default function RenderHistory({ items }) {
             secondary={moment(item[1]["timestamp"].toDate()).fromNow()}
           />
           <ListItemSecondaryAction>
-            <Button onClick={() => redirectToResults(item[0])}>results</Button>
+            <IconButton onClick={() => redirectToResults(item[0])}>
+              <LinkIcon />
+            </IconButton>
           </ListItemSecondaryAction>
         </ListItem>
       ))}

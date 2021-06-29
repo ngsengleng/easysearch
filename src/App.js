@@ -1,3 +1,4 @@
+import React from "react";
 import {
   FirebaseAuthConsumer,
   FirebaseAuthProvider,
@@ -20,6 +21,7 @@ import Trending from "./pages/pageTrending";
 import Wishlist from "./pages/pageWishlist";
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
 export default function App() {
   return (
     <div>

@@ -16,7 +16,7 @@ import TrendingCarousel from "../../components/TrendingCarousel";
 
 const db = firebase.firestore();
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   title: {
     justifyContent: "center",
     textAlign: "center",
@@ -25,10 +25,16 @@ const useStyles = makeStyles({
   },
 
   searchBox: {
-    width: "50%",
+    [theme.breakpoints.down("xs")]: {
+      width: "70%",
+    },
+
+    [theme.breakpoints.up("sm")]: {
+      width: "50%",
+    },
     alignSelf: "center",
-    paddingRight: "1rem",
-    paddingBottom: "1rem",
+    paddingRight: "15px",
+    paddingBottom: "15px",
   },
 
   searchComponents: {
@@ -37,10 +43,13 @@ const useStyles = makeStyles({
     textAlign: "center",
     flexDirection: "column",
   },
-});
+}));
 export default function Home() {
   const classes = useStyles();
   const location = useLocation();
+
+  const [width, setWidth] = useState(window.innerWidth);
+  const breakpoint = 500;
 
   // key for helping react keep track of map variables
   var key = 0;
@@ -58,10 +67,6 @@ export default function Home() {
     setDisableButton(false);
     fetchData(keyword);
   };
-
-  useEffect(() => {
-    document.title = "Home";
-  }, []);
 
   // submits user search history keyword to firestore
   // name of product is saved as the document name
@@ -201,13 +206,28 @@ export default function Home() {
       console.log("error occured in fetching api data");
     }
   }, [apiSuccess]);
+  useEffect(() => {
+    document.title = "Home";
+    const handleWindowResize = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handleWindowResize);
+
+    // Return a function from the effect that removes the event listener
+    return () => window.removeEventListener("resize", handleWindowResize);
+  }, []);
 
   return (
     <div>
       <TrendingCarousel />
-      <Typography variant="h4" className={classes.title}>
-        What do you want to buy today?
-      </Typography>
+      {width < breakpoint ? (
+        <Typography variant="h5" className={classes.title}>
+          What do you want to buy today?
+        </Typography>
+      ) : (
+        <Typography variant="h4" className={classes.title}>
+          What do you want to buy today?
+        </Typography>
+      )}
+
       <form
         className={classes.searchComponents}
         onSubmit={handleSubmit(onSubmit)}
