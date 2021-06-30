@@ -57,12 +57,15 @@ export default function Home() {
   const [value, setValue] = useState([]);
   const [bool, setBool] = useState(false);
   const [apiSuccess, setApiSuccess] = useState(true);
+  const [disableSearch, setDisableSearch] = useState(false);
+
   const [sortConfig, setSortConfig] = useState({
     price: "ascending",
     store: "ascending",
   });
 
   const onSubmit = (keyword) => {
+    setDisableSearch(true);
     fetchData(keyword);
   };
 
@@ -212,7 +215,11 @@ export default function Home() {
     // Return a function from the effect that removes the event listener
     return () => window.removeEventListener("resize", handleWindowResize);
   }, []);
-
+  useEffect(() => {
+    if (disableSearch === true && value.length === 12) {
+      setDisableSearch(false);
+    }
+  }, [value, disableSearch]);
   return (
     <div>
       <TrendingCarousel />
@@ -248,9 +255,15 @@ export default function Home() {
           )}
           rules={{ required: "Please type something" }}
         />
-        <Button variant="contained" color="primary" type="submit">
-          Search
-        </Button>
+        {disableSearch ? (
+          <Button variant="contained" disabled color="primary">
+            Searching...
+          </Button>
+        ) : (
+          <Button variant="contained" color="primary" type="submit">
+            Search
+          </Button>
+        )}
       </form>
       <ResultsHeader sortConfig={sortConfig} sortResults={sortResults} />
       {value?.map((entry) => {

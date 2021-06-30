@@ -50,7 +50,7 @@ export default function ResultsHeader({ sortConfig, sortResults }) {
   return (
     <div>
       <Grid container className={classes.resultHeader}>
-        <Grid item xs={width < lg ? 0 : 1}></Grid>
+        <Grid item xs={width < lg ? false : 1}></Grid>
 
         <Grid item xs={2} className={classes.headerText}>
           <Typography variant="button" display="block" gutterBottom>

@@ -141,7 +141,7 @@ function RenderLink(props) {
 
   return (
     <Grid container item>
-      <Grid item xs={width < lg ? 0 : 1}></Grid>
+      <Grid item xs={width < lg ? false : 1}></Grid>
 
       <Grid item xs={2}>
         <img
