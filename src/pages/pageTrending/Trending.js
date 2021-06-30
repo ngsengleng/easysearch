@@ -42,7 +42,8 @@ export default function Trending() {
       {results !== undefined ? (
         <div>
           <Typography variant="h4" className={classes.title}>
-            Top {results?.length / 3} trending products from each store
+            Top {results?.length / 3} trending {location.keyword} products from
+            each store
           </Typography>
           <GeneralHeader />
           <Divider />
