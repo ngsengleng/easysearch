@@ -20,7 +20,12 @@ import Signup from "./pages/pageSignup";
 import Trending from "./pages/pageTrending";
 import Wishlist from "./pages/pageWishlist";
 
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from "react-router-dom";
 
 export default function App() {
   return (
@@ -45,6 +50,9 @@ export default function App() {
 
                 <Route exact path="/">
                   <Home />
+                </Route>
+                <Route path="/forget">
+                  <Redirect to="/" />
                 </Route>
               </Switch>
             </IfFirebaseAuthed>
