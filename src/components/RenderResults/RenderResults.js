@@ -13,6 +13,7 @@ import ExitToAppRoundedIcon from "@material-ui/icons/ExitToAppRounded";
 import "firebase/database";
 import "firebase/firestore";
 import { firebase } from "@firebase/app";
+import empty from "../../photos/empty.png";
 
 const db = firebase.firestore();
 
@@ -42,9 +43,12 @@ export default function RenderResults(props) {
   const a = db.collection("users").doc(currentUser).collection("wishlist");
   const [disableButton, setDisableButton] = useState();
   const num = 0;
-  const url = props.itemData?.url.includes("https://")
-    ? props.itemData?.url
-    : "https://" + props.itemData?.url;
+  const url =
+    props.itemData?.url === "Nil"
+      ? "Nil"
+      : props.itemData?.url.includes("https://")
+      ? props.itemData?.url
+      : "https://" + props.itemData?.url;
 
   // find out how to set the disableButton state back to false if no results present
   useEffect(() => {
@@ -135,7 +139,6 @@ function RenderLink(props) {
     const handleWindowResize = () => setWidth(window.innerWidth);
     window.addEventListener("resize", handleWindowResize);
 
-    // Return a function from the effect that removes the event listener
     return () => window.removeEventListener("resize", handleWindowResize);
   }, []);
 
@@ -144,11 +147,15 @@ function RenderLink(props) {
       <Grid item xs={width < lg ? false : 1}></Grid>
 
       <Grid item xs={2}>
-        <img
-          src={props.itemData?.image}
-          alt="product"
-          className={classes.image}
-        />
+        {props.itemData?.image === "Nil" ? (
+          <img src={empty} alt="product" className={classes.image} />
+        ) : (
+          <img
+            src={props.itemData?.image}
+            alt="product"
+            className={classes.image}
+          />
+        )}
       </Grid>
 
       <Grid item xs={width < lg ? 2 : 3}>
@@ -158,7 +165,9 @@ function RenderLink(props) {
           gutterBottom
           className={classes.title}
         >
-          {props.itemData?.title}
+          {props.itemData?.title === "Nil"
+            ? "Product does not exist"
+            : props.itemData?.title}
         </Typography>
       </Grid>
 
@@ -208,6 +217,7 @@ function RenderLink(props) {
             color="primary"
             style={{ color: "#212121" }}
             onClick={() => openInNewTab(props.url)}
+            disabled={props.url === "Nil"}
           >
             <ExitToAppRoundedIcon />
           </IconButton>
@@ -217,6 +227,7 @@ function RenderLink(props) {
             color="primary"
             style={{ color: "#212121" }}
             onClick={() => openInNewTab(props.url)}
+            disabled={props.url === "Nil"}
           >
             go to site
           </Button>

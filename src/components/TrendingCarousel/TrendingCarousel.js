@@ -15,6 +15,7 @@ import home from "../../photos/home.jpeg";
 import beauty from "../../photos/beauty.jpeg";
 import fashion from "../../photos/fashion.jpeg";
 import food from "../../photos/food.jpeg";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "auto",

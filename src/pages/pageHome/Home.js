@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     textAlign: "center",
     display: "flex",
-    marginBottom: "5px",
+    margin: "50px",
   },
 
   searchBox: {
@@ -94,19 +94,40 @@ export default function Home() {
   // https://easysearchserver.herokuapp.com/<insert keyword>/ezbuy
   // https://easysearchserver.herokuapp.com/<insert keyword>/shopee
   // https://easysearchcrawl.herokuapp.com/<insert keyword>/q100
-  // "https://easysearchcrawl.herokuapp.com/<insert>/amazon"
+  // https://easysearchcrawl.herokuapp.com/<insert>/amazon
+  // https://easysearchbackup1.herokuapp.com/keyword/amazon
+  // https://easysearchbackup2.herokuapp.com/keyword/amazon
+  // https://easysearchbackup3.herokuapp.com/keyword/amazon
+  // https://easysearchbackup4.herokuapp.com/keyword/amazon
   const runSearchAPI = async (keyword, shop) => {
     const hyperlinks = {
       shopee: "https://easysearchserver.herokuapp.com/" + keyword + "/shopee",
       ezbuy: "https://easysearchserver.herokuapp.com/" + keyword + "/ezbuy",
-      amazon: "https://easysearchcrawl.herokuapp.com/" + keyword + "/amazon",
       qoo10: "https://easysearchcrawl2.herokuapp.com/" + keyword + "/q100",
+      amazon: [
+        "https://easysearchcrawl.herokuapp.com/" + keyword + "/amazon",
+        "https://easysearchbackup1.herokuapp.com/" + keyword + "/amazon",
+        "https://easysearchbackup2.herokuapp.com/" + keyword + "/amazon",
+        "https://easysearchbackup3.herokuapp.com/" + keyword + "/amazon",
+        "https://easysearchbackup4.herokuapp.com/" + keyword + "/amazon",
+      ],
     };
-
+    function getRandomIntInclusive(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+    /* fetch(hyperlinks[x]).catch((error) => setApiSuccess(false)); */
     await Promise.all(
-      shop.map((x) =>
-        fetch(hyperlinks[x]).catch((error) => setApiSuccess(false))
-      )
+      shop.map((x) => {
+        if (x === "amazon") {
+          const link = hyperlinks[x][getRandomIntInclusive(0, 4)];
+          fetch(link).catch((error) => setApiSuccess(false));
+        } else {
+          fetch(hyperlinks[x]).catch((error) => setApiSuccess(false));
+        }
+        return null;
+      })
     );
   };
 
@@ -125,8 +146,10 @@ export default function Home() {
     if (key === "price") {
       setValue(
         [...value].sort((a, b) => {
-          const priceA = a[1]["price"].substring(1);
-          const priceB = b[1]["price"].substring(1);
+          const priceA =
+            a[1]["price"] === "Nil" ? Infinity : a[1]["price"].substring(1);
+          const priceB =
+            b[1]["price"] === "Nil" ? Infinity : b[1]["price"].substring(1);
           return sortConfig[key] === "descending"
             ? priceA - priceB
             : priceB - priceA;
@@ -212,7 +235,6 @@ export default function Home() {
     const handleWindowResize = () => setWidth(window.innerWidth);
     window.addEventListener("resize", handleWindowResize);
 
-    // Return a function from the effect that removes the event listener
     return () => window.removeEventListener("resize", handleWindowResize);
   }, []);
   useEffect(() => {
@@ -232,7 +254,6 @@ export default function Home() {
           What do you want to buy today?
         </Typography>
       )}
-
       <form
         className={classes.searchComponents}
         onSubmit={handleSubmit(onSubmit)}
@@ -265,6 +286,15 @@ export default function Home() {
           </Button>
         )}
       </form>
+      {value.length === 0 ? null : width < breakpoint ? (
+        <Typography variant="h5" className={classes.title}>
+          Showing {value.length} of 12 items
+        </Typography>
+      ) : (
+        <Typography variant="h4" className={classes.title}>
+          Showing {value.length} of 12 items
+        </Typography>
+      )}
       <ResultsHeader sortConfig={sortConfig} sortResults={sortResults} />
       {value?.map((entry) => {
         key += 1;

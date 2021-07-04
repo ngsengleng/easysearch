@@ -12,7 +12,7 @@ import "@firebase/auth";
 
 import AppShell from "./components/AppShell";
 
-import Construction from "./pages/pageUnderConstruction";
+import ForgetPassword from "./pages/pageForgetPassword";
 import Home from "./pages/pageHome";
 import History from "./pages/pageHistory";
 import Login from "./pages/pageLogin";
@@ -63,7 +63,7 @@ export default function App() {
                 </Route>
 
                 <Route path="/forget">
-                  <Construction />
+                  <ForgetPassword />
                 </Route>
 
                 <Route exact path="/">
