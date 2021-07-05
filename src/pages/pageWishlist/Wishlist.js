@@ -3,7 +3,7 @@ import RenderResults from "../../components/RenderResults";
 import "firebase/database";
 import "firebase/firestore";
 import { firebase } from "@firebase/app";
-import { Typography, makeStyles, Link } from "@material-ui/core";
+import { Typography, makeStyles, Link, Button, Box } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import GeneralHeader from "../../components/GeneralHeader";
 
@@ -11,9 +11,10 @@ const db = firebase.firestore();
 
 const useStyles = makeStyles({
   pageHeader: {
-    margin: "auto",
+    margin: "30px",
     textAlign: "center",
     marginTop: "10px",
+    borderSpacing: "",
   },
 
   homeLink: {
@@ -29,13 +30,22 @@ export default function Wishlist() {
   const classes = useStyles();
   const [wishlist, setWishlist] = useState([]);
   const [bool, setBool] = useState();
+  const [subscribed, setSubscribed] = useState(false);
   const goToHome = () => history.push("/");
   // fetch data from firestore on page render
   useEffect(() => {
     document.title = "Wishlist";
     let unsubscribe = "";
+    let unsub = "";
+
     const fetchWishlist = async () => {
       const currentUser = firebase.auth().currentUser.uid;
+      const mailingList = await db.collection("users").doc(currentUser);
+      unsub = mailingList.onSnapshot((doc) => {
+        if (doc.exists) {
+          setSubscribed(doc.data()["mailing_list"]);
+        }
+      });
       const data = await db
         .collection("users")
         .doc(currentUser)
@@ -53,18 +63,60 @@ export default function Wishlist() {
     fetchWishlist();
     return () => {
       unsubscribe();
+      unsub();
     };
   }, []);
+  const subscribeToWishlist = async () => {
+    const currentUser = firebase.auth().currentUser.uid;
+    setSubscribed(true);
+    db.collection("users").doc(currentUser).set(
+      {
+        mailing_list: true,
+      },
+      { merge: true }
+    );
+  };
+  const unsubscribeFromWishlist = async () => {
+    const currentUser = firebase.auth().currentUser.uid;
+    setSubscribed(false);
+    db.collection("users").doc(currentUser).set(
+      {
+        mailing_list: false,
+      },
+      { merge: true }
+    );
+  };
   return (
     <div>
-      <Typography
-        variant="h3"
-        display="block"
-        gutterBottom
-        className={classes.pageHeader}
-      >
-        Wishlist
-      </Typography>
+      <Box className={classes.pageHeader}>
+        <Typography
+          variant="h3"
+          display="block"
+          gutterBottom
+          className={classes.pageHeader}
+        >
+          Wishlist
+        </Typography>
+
+        {!subscribed ? (
+          <Button
+            variant="outlined"
+            color="inherit"
+            onClick={subscribeToWishlist}
+          >
+            Subcribe to notifications now!
+          </Button>
+        ) : (
+          <Button
+            variant="outlined"
+            color="inherit"
+            onClick={unsubscribeFromWishlist}
+          >
+            Unsubscribe
+          </Button>
+        )}
+      </Box>
+
       <GeneralHeader />
       {wishlist === undefined || wishlist.length === 0 ? (
         <div>
