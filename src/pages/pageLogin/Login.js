@@ -60,7 +60,7 @@ export default function SignIn() {
         history.push("/");
       })
       .catch((error) => {
-        var errorCode = error.code;
+        const errorCode = error.code;
         if (errorCode === "auth/wrong-password") {
           alert("Wrong password.");
         } else if (errorCode === "auth/user-not-found") {
