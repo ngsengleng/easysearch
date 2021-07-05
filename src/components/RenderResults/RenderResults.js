@@ -55,16 +55,11 @@ export default function RenderResults(props) {
     const newField = { store: props.store };
     const newItemData = { ...props.itemData, ...newField };
 
-    const unsubscribe = a
-      .where("items", "array-contains", newItemData)
-      .onSnapshot((snapshot) => {
-        snapshot.forEach((userSnapshot) => {
-          setDisableButton(true);
-        });
+    a.where("items", "array-contains", newItemData).onSnapshot((snapshot) => {
+      snapshot.forEach((userSnapshot) => {
+        setDisableButton(true);
       });
-    return () => {
-      unsubscribe();
-    };
+    });
   }, [a, props.itemData, props.store]);
 
   if (props.bool) {
@@ -72,7 +67,6 @@ export default function RenderResults(props) {
       <Grid container className={classes.displayGrid}>
         <RenderLink
           item={props.item}
-          name={props.name}
           key={num}
           bool={props.bool}
           url={url}
@@ -91,6 +85,7 @@ export default function RenderResults(props) {
 function RenderLink(props) {
   const classes = useStyles();
   const currentUser = firebase.auth().currentUser.uid;
+
   const a = db.collection("users").doc(currentUser).collection("wishlist");
   const openInNewTab = (url) => {
     const newWindow = window.open(url, "_blank", "noopener,noreferrer");
@@ -99,14 +94,14 @@ function RenderLink(props) {
   const [width, setWidth] = useState(window.innerWidth);
   const lg = 1000;
   const sm = 750;
-
   const addToWishlist = (product) => {
+    props.setDisableButton(true);
     const unsubscribe = a.get().then((doc) => {
       if (!doc.exists) {
         a.doc("arrayOfItems").set(
           {
             items: firebase.firestore.FieldValue.arrayUnion({
-              item: props.item,
+              item: props.itemData.item,
               store: props.store,
               image: product.image,
               title: product.title,
@@ -128,6 +123,7 @@ function RenderLink(props) {
     props.setDisableButton(false);
     a.doc("arrayOfItems").update({
       items: firebase.firestore.FieldValue.arrayRemove({
+        item: props.itemData.item,
         store: props.store,
         image: product.image,
         title: product.title,

@@ -58,7 +58,6 @@ export default function Home() {
   const [bool, setBool] = useState(false);
   const [apiSuccess, setApiSuccess] = useState(true);
   const [disableSearch, setDisableSearch] = useState(false);
-  const [item, setItem] = useState();
   const [sortConfig, setSortConfig] = useState({
     price: "ascending",
     store: "ascending",
@@ -198,13 +197,16 @@ export default function Home() {
     let isRetrieving = false;
     dbRef.on("value", (snapshot) => {
       if (snapshot.exists()) {
-        setItem(data.searchValue.toLowerCase());
         const dataArr = [];
         let leftoverShops = [];
         const availableShops = [];
         snapshot.forEach((entry) => {
           availableShops.push(entry.key);
-          entry.val().forEach((x) => dataArr.push([entry.key, x]));
+          entry.val().forEach((x) => {
+            const newF = { item: data.searchValue.toLowerCase() };
+            const y = { ...x, ...newF };
+            dataArr.push([entry.key, y]);
+          });
         });
         leftoverShops = shops.filter(
           (item) => !availableShops.some((item2) => item === item2)
@@ -302,7 +304,6 @@ export default function Home() {
         return (
           <RenderResults
             key={key}
-            item={item}
             itemData={entry[1]}
             bool={bool}
             store={entry[0]}
