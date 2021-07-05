@@ -71,6 +71,7 @@ export default function RenderResults(props) {
     return (
       <Grid container className={classes.displayGrid}>
         <RenderLink
+          item={props.item}
           name={props.name}
           key={num}
           bool={props.bool}
@@ -105,6 +106,7 @@ function RenderLink(props) {
         a.doc("arrayOfItems").set(
           {
             items: firebase.firestore.FieldValue.arrayUnion({
+              item: props.item,
               store: props.store,
               image: product.image,
               title: product.title,
