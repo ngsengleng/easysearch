@@ -66,7 +66,7 @@ export default function App() {
                   <ForgetPassword />
                 </Route>
 
-                <Route exact path="/">
+                <Route path="/">
                   <Login />
                 </Route>
               </Switch>
