@@ -27,7 +27,11 @@ export default function Trending() {
         if (snapshot.exists()) {
           const arr = [];
           snapshot.forEach((entry) =>
-            entry.val().forEach((x) => arr.push([entry.key, x]))
+            entry.val().forEach((x) => {
+              const newField = { item: "trending" };
+              const y = { ...x, ...newField };
+              arr.push([entry.key, y]);
+            })
           );
           setResults(arr);
           setBool(true);

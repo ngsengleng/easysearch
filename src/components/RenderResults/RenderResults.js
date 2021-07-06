@@ -46,7 +46,8 @@ export default function RenderResults(props) {
   const url =
     props.itemData?.url === "Nil"
       ? "Nil"
-      : props.itemData?.url.includes("https://")
+      : props.itemData?.url.includes("https://") ||
+        props.itemData?.url.includes("http://")
       ? props.itemData?.url
       : "https://" + props.itemData?.url;
 
