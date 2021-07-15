@@ -93,16 +93,15 @@ export default function Home() {
   // https://easysearchserver.herokuapp.com/<insert keyword>/ezbuy
   // https://easysearchserver.herokuapp.com/<insert keyword>/shopee
   // https://easysearchcrawl.herokuapp.com/<insert keyword>/q100
-  // https://easysearchcrawl.herokuapp.com/<insert>/amazon
-  // https://easysearchbackup1.herokuapp.com/keyword/amazon
-  // https://easysearchbackup2.herokuapp.com/keyword/amazon
-  // https://easysearchbackup3.herokuapp.com/keyword/amazon
-  // https://easysearchbackup4.herokuapp.com/keyword/amazon
+
   const runSearchAPI = async (keyword, shop) => {
     const hyperlinks = {
       shopee: "https://easysearchserver.herokuapp.com/" + keyword + "/shopee",
       ezbuy: "https://easysearchserver.herokuapp.com/" + keyword + "/ezbuy",
-      qoo10: "https://easysearchcrawl2.herokuapp.com/" + keyword + "/q100",
+      qoo10:
+        "http://easysearchserver-env-3.eba-3pjbymty.ap-southeast-1.elasticbeanstalk.com/" +
+        keyword +
+        "/qoo10",
       amazon:
         "http://easysearchserver-env-3.eba-3pjbymty.ap-southeast-1.elasticbeanstalk.com/" +
         keyword +
