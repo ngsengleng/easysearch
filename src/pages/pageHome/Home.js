@@ -103,30 +103,16 @@ export default function Home() {
       shopee: "https://easysearchserver.herokuapp.com/" + keyword + "/shopee",
       ezbuy: "https://easysearchserver.herokuapp.com/" + keyword + "/ezbuy",
       qoo10: "https://easysearchcrawl2.herokuapp.com/" + keyword + "/q100",
-      amazon: [
-        "https://easysearchcrawl.herokuapp.com/" + keyword + "/amazon",
-        "https://easysearchbackup1.herokuapp.com/" + keyword + "/amazon",
-        "https://easysearchbackup2.herokuapp.com/" + keyword + "/amazon",
-        "https://easysearchbackup3.herokuapp.com/" + keyword + "/amazon",
-        "https://easysearchbackup4.herokuapp.com/" + keyword + "/amazon",
-      ],
+      amazon:
+        "http://easysearchserver-env-3.eba-3pjbymty.ap-southeast-1.elasticbeanstalk.com/" +
+        keyword +
+        "/amazon",
     };
-    function getRandomIntInclusive(min, max) {
-      min = Math.ceil(min);
-      max = Math.floor(max);
-      return Math.floor(Math.random() * (max - min + 1) + min);
-    }
-    /* fetch(hyperlinks[x]).catch((error) => setApiSuccess(false)); */
+
     await Promise.all(
-      shop.map((x) => {
-        if (x === "amazon") {
-          const link = hyperlinks[x][getRandomIntInclusive(0, 4)];
-          fetch(link).catch((error) => setApiSuccess(false));
-        } else {
-          fetch(hyperlinks[x]).catch((error) => setApiSuccess(false));
-        }
-        return null;
-      })
+      shop.map((x) =>
+        fetch(hyperlinks[x]).catch((error) => setApiSuccess(false))
+      )
     );
   };
 
