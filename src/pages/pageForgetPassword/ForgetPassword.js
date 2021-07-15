@@ -59,7 +59,10 @@ export default function SignIn() {
         history.push("/");
       })
       .catch((error) => {
-        console.log(error);
+        const errorCode = error.code;
+        if (errorCode === "auth/user-not-found") {
+          alert("This user does not exist.");
+        }
       });
   };
 

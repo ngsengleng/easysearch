@@ -84,6 +84,7 @@ export default function RenderResults(props) {
 }
 
 function RenderLink(props) {
+  const [validImage, setValidImage] = useState(true);
   const classes = useStyles();
   const currentUser = firebase.auth().currentUser.uid;
 
@@ -146,14 +147,15 @@ function RenderLink(props) {
       <Grid item xs={width < lg ? false : 1}></Grid>
 
       <Grid item xs={2}>
-        {props.itemData?.image === "Nil" ? (
-          <img src={empty} alt="product" className={classes.image} />
-        ) : (
+        {validImage ? (
           <img
-            src={props.itemData?.image}
+            src={props.itemData.image}
+            onError={() => setValidImage(false)}
             alt="product"
             className={classes.image}
           />
+        ) : (
+          <img src={empty} alt="product" className={classes.image} />
         )}
       </Grid>
 
