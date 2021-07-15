@@ -12,6 +12,7 @@ import "@firebase/auth";
 
 import AppShell from "./components/AppShell";
 
+import Food from "./pages/pageFood";
 import ForgetPassword from "./pages/pageForgetPassword";
 import Home from "./pages/pageHome";
 import History from "./pages/pageHistory";
@@ -38,6 +39,10 @@ export default function App() {
               <Switch>
                 <Route path="/history">
                   <History />
+                </Route>
+
+                <Route path="/food">
+                  <Food />
                 </Route>
 
                 <Route path="/wishlist">

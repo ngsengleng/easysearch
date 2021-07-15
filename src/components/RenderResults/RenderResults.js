@@ -66,16 +66,27 @@ export default function RenderResults(props) {
   if (props.bool) {
     return (
       <Grid container className={classes.displayGrid}>
-        <RenderLink
-          item={props.item}
-          key={num}
-          bool={props.bool}
-          url={url}
-          itemData={props.itemData}
-          store={props.store}
-          disable={disableButton}
-          setDisableButton={setDisableButton}
-        />
+        {props.type === "shops" ? (
+          <RenderLink
+            item={props.item}
+            key={num}
+            bool={props.bool}
+            url={url}
+            itemData={props.itemData}
+            store={props.store}
+            disable={disableButton}
+            setDisableButton={setDisableButton}
+          />
+        ) : props.type === "food" ? (
+          <FoodRenderLink
+            item={props.item}
+            key={num}
+            bool={props.bool}
+            url={url}
+            itemData={props.itemData}
+            store={props.store}
+          />
+        ) : null}
       </Grid>
     );
   } else {
@@ -210,6 +221,99 @@ function RenderLink(props) {
             <IndeterminateCheckBoxIcon />
           </IconButton>
         )}
+      </Grid>
+      <Grid item xs={width < sm ? 2 : 1}>
+        {width < lg ? (
+          <IconButton
+            variant="outlined"
+            color="primary"
+            style={{ color: "#212121" }}
+            onClick={() => openInNewTab(props.url)}
+            disabled={props.url === "Nil"}
+          >
+            <ExitToAppRoundedIcon />
+          </IconButton>
+        ) : (
+          <Button
+            variant="outlined"
+            color="primary"
+            style={{ color: "#212121" }}
+            onClick={() => openInNewTab(props.url)}
+            disabled={props.url === "Nil"}
+          >
+            go to site
+          </Button>
+        )}
+      </Grid>
+    </Grid>
+  );
+}
+
+function FoodRenderLink(props) {
+  const [validImage, setValidImage] = useState(true);
+  const classes = useStyles();
+
+  const openInNewTab = (url) => {
+    const newWindow = window.open(url, "_blank", "noopener,noreferrer");
+    if (newWindow) newWindow.opener = null;
+  };
+  const [width, setWidth] = useState(window.innerWidth);
+  const lg = 1000;
+  const sm = 750;
+
+  useEffect(() => {
+    const handleWindowResize = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handleWindowResize);
+
+    return () => window.removeEventListener("resize", handleWindowResize);
+  }, []);
+
+  return (
+    <Grid container item>
+      <Grid item xs={width < lg ? false : 1}></Grid>
+
+      <Grid item xs={2}>
+        {validImage ? (
+          <img
+            src={props.itemData.image}
+            onError={() => setValidImage(false)}
+            alt="product"
+            className={classes.image}
+          />
+        ) : (
+          <img src={empty} alt="product" className={classes.image} />
+        )}
+      </Grid>
+
+      <Grid item xs={width < lg ? 2 : 3}>
+        <Typography
+          variant="body2"
+          display="block"
+          gutterBottom
+          className={classes.title}
+        >
+          {props.itemData?.title === "Nil"
+            ? "Product does not exist"
+            : props.itemData?.title}
+        </Typography>
+      </Grid>
+
+      <Grid item xs={width < lg ? 2 : 1}>
+        <p>{props.itemData?.price}</p>
+      </Grid>
+
+      <Grid item xs={width < lg ? 2 : 1}>
+        <p>{props.store}</p>
+      </Grid>
+
+      {width < sm ? null : (
+        <Grid item xs={1}>
+          <p>{props.itemData?.location}</p>
+        </Grid>
+      )}
+
+      <Grid item xs={width < sm ? 2 : 1}>
+        <p>{props.itemData?.discount}</p>
       </Grid>
       <Grid item xs={width < sm ? 2 : 1}>
         {width < lg ? (

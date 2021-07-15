@@ -13,6 +13,7 @@ import HomeIcon from "@material-ui/icons/Home";
 import HistoryIcon from "@material-ui/icons/History";
 import BookmarkIcon from "@material-ui/icons/Bookmark";
 import PersonIcon from "@material-ui/icons/Person";
+import FastfoodIcon from "@material-ui/icons/Fastfood";
 
 import { FirebaseAuthConsumer, IfFirebaseAuthed } from "@react-firebase/auth";
 import { firebase } from "@firebase/app";
@@ -74,6 +75,12 @@ function AppShell() {
                     </IconButton>
                     <IconButton
                       color="inherit"
+                      onClick={() => history.push("/")}
+                    >
+                      <FastfoodIcon />
+                    </IconButton>
+                    <IconButton
+                      color="inherit"
                       aria-describedby="search-history"
                       onClick={() => history.push("/history")}
                     >
@@ -103,6 +110,13 @@ function AppShell() {
                       onClick={() => history.push("/")}
                     >
                       home
+                    </Button>
+                    <Button
+                      color="inherit"
+                      aria-describedby="home"
+                      onClick={() => history.push("/food")}
+                    >
+                      food
                     </Button>
                     <Button
                       color="inherit"

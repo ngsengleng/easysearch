@@ -31,14 +31,14 @@ const useStyles = makeStyles({
     alignItems: "center",
   },
 });
-
-export default function ResultsHeader({ sortConfig, sortResults }) {
+const lg = 1000;
+const sm = 750;
+const xs = 400;
+export default function ResultsHeader({ sortConfig, sortResults, type }) {
   const classes = useStyles();
 
   const [width, setWidth] = useState(window.innerWidth);
-  const lg = 1000;
-  const sm = 750;
-  const xs = 400;
+
   useEffect(() => {
     const handleWindowResize = () => setWidth(window.innerWidth);
     window.addEventListener("resize", handleWindowResize);
@@ -46,6 +46,24 @@ export default function ResultsHeader({ sortConfig, sortResults }) {
     return () => window.removeEventListener("resize", handleWindowResize);
   }, []);
 
+  return type === "shops" ? (
+    <ShopHeader
+      width={width}
+      classes={classes}
+      sortConfig={sortConfig}
+      sortResults={sortResults}
+    />
+  ) : type === "food" ? (
+    <FoodHeader
+      width={width}
+      classes={classes}
+      sortConfig={sortConfig}
+      sortResults={sortResults}
+    />
+  ) : null;
+}
+
+function ShopHeader({ sortConfig, sortResults, width, classes }) {
   return (
     <div>
       <Grid container className={classes.resultHeader}>
@@ -103,6 +121,82 @@ export default function ResultsHeader({ sortConfig, sortResults }) {
         <Grid item xs={width < sm ? 2 : 1} className={classes.headerText}>
           <Typography variant="button" display="block" gutterBottom>
             WISHLIST
+          </Typography>
+        </Grid>
+
+        <Grid item xs={width < xs ? 2 : 1} className={classes.headerText}>
+          {width < lg ? (
+            <LinkIcon />
+          ) : (
+            <Typography variant="button" display="block" gutterBottom>
+              link to site
+            </Typography>
+          )}
+        </Grid>
+      </Grid>
+      <Divider className={classes.divider} />
+    </div>
+  );
+}
+
+function FoodHeader({ sortConfig, sortResults, width, classes }) {
+  return (
+    <div>
+      <Grid container className={classes.resultHeader}>
+        <Grid item xs={width < lg ? false : 1}></Grid>
+
+        <Grid item xs={2} className={classes.headerText}>
+          <Typography variant="button" display="block" gutterBottom>
+            IMAGE
+          </Typography>
+        </Grid>
+
+        {width < lg ? (
+          <Grid item xs={2} className={classes.headerText}>
+            <Typography variant="button" display="block" gutterBottom>
+              ITEM
+            </Typography>
+          </Grid>
+        ) : (
+          <Grid item xs={3} className={classes.headerText}>
+            <Typography variant="button" display="block" gutterBottom>
+              ITEM NAME
+            </Typography>
+          </Grid>
+        )}
+
+        <Grid item xs={width < lg ? 2 : 1} className={classes.buttonGrid}>
+          <Button
+            size="medium"
+            color="primary"
+            className={classes.sortButton}
+            onClick={() => sortResults("price")}
+          >
+            price {sortConfig["price"] === "ascending" ? "↑" : "↓"}
+          </Button>
+        </Grid>
+
+        <Grid item xs={width < lg ? 2 : 1} className={classes.buttonGrid}>
+          <Button
+            size="medium"
+            className={classes.sortButton}
+            onClick={() => sortResults("store")}
+          >
+            store {sortConfig["store"] === "ascending" ? "↑" : "↓"}
+          </Button>
+        </Grid>
+
+        {width < sm ? null : (
+          <Grid item xs={1} className={classes.headerText}>
+            <Typography variant="button" display="block" gutterBottom>
+              location
+            </Typography>
+          </Grid>
+        )}
+
+        <Grid item xs={width < sm ? 2 : 1} className={classes.headerText}>
+          <Typography variant="button" display="block" gutterBottom>
+            discount
           </Typography>
         </Grid>
 

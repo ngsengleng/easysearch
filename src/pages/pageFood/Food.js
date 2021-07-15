@@ -12,7 +12,6 @@ import { Typography, makeStyles } from "@material-ui/core";
 
 import ResultsHeader from "../../components/ResultsHeader";
 import RenderResults from "../../components/RenderResults";
-import TrendingCarousel from "../../components/TrendingCarousel";
 
 const db = firebase.firestore();
 
@@ -75,7 +74,7 @@ export default function Home() {
     var searchHistory = db
       .collection("users")
       .doc(currentUser)
-      .collection("searchHistory")
+      .collection("foodSearchHistory")
       .doc(keyword);
     searchHistory
       .set(
@@ -96,10 +95,7 @@ export default function Home() {
 
   const runSearchAPI = async (keyword, shop) => {
     const hyperlinks = {
-      shopee: "https://easysearchserver.herokuapp.com/" + keyword + "/shopee",
-      ezbuy: "https://easysearchserver.herokuapp.com/" + keyword + "/ezbuy",
-      qoo10: "https://dv4r9egjzlhdl.cloudfront.net/" + keyword + "/qoo10",
-      amazon: "https://dv4r9egjzlhdl.cloudfront.net/" + keyword + "/amazon",
+      chope: "https://easysearchfoodchope.herokuapp.com/" + keyword + "/chope",
     };
 
     await Promise.all(
@@ -166,10 +162,12 @@ export default function Home() {
   // on successful return will save search keyword under user
   const fetchData = useCallback((data) => {
     // shops in circulation
-    const shops = ["ezbuy", "shopee", "amazon", "qoo10"];
+    const shops = ["chope"];
     // update search history even if no results
     updateHistory(data.searchValue.toLowerCase());
-    const dbRef = firebase.database().ref("/" + data.searchValue.toLowerCase());
+    const dbRef = firebase
+      .database()
+      .ref("/easysearchfoodvoucher/" + data.searchValue.toLowerCase());
     // function to get all the values
     // await all of them
     // process the data when they are all here
@@ -213,27 +211,26 @@ export default function Home() {
     }
   }, [apiSuccess]);
   useEffect(() => {
-    document.title = "Home";
+    document.title = "Food";
     const handleWindowResize = () => setWidth(window.innerWidth);
     window.addEventListener("resize", handleWindowResize);
 
     return () => window.removeEventListener("resize", handleWindowResize);
   }, []);
   useEffect(() => {
-    if (disableSearch === true && value.length === 12) {
+    if (disableSearch === true && value.length >= 6) {
       setDisableSearch(false);
     }
   }, [value, disableSearch]);
   return (
     <div>
-      <TrendingCarousel />
       {width < breakpoint ? (
         <Typography variant="h5" className={classes.title}>
-          What do you want to buy today?
+          Find the best food deals!
         </Typography>
       ) : (
         <Typography variant="h4" className={classes.title}>
-          What do you want to buy today?
+          Find the best food deals!
         </Typography>
       )}
       <form
@@ -270,23 +267,23 @@ export default function Home() {
       </form>
       {value.length === 0 ? null : width < breakpoint ? (
         <Typography variant="h5" className={classes.title}>
-          Showing {value.length} of 12 items
+          Showing {value.length} of 6 items
         </Typography>
       ) : (
         <Typography variant="h4" className={classes.title}>
-          Showing {value.length} of 12 items
+          Showing {value.length} of 6 items
         </Typography>
       )}
       <ResultsHeader
         sortConfig={sortConfig}
         sortResults={sortResults}
-        type={"shops"}
+        type={"food"}
       />
       {value?.map((entry) => {
         key += 1;
         return (
           <RenderResults
-            type={"shops"}
+            type={"food"}
             key={key}
             itemData={entry[1]}
             bool={bool}

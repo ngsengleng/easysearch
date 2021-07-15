@@ -43,7 +43,14 @@ export default function History() {
         .doc(currentUser)
         .collection("searchHistory")
         .get();
-      const arr = allData.docs.map((doc) => [doc.id, doc.data()]);
+      const foodData = await db
+        .collection("users")
+        .doc(currentUser)
+        .collection("foodSearchHistory")
+        .get();
+      const shopArr = allData.docs.map((doc) => [doc.id, doc.data(), "shop"]);
+      const foodArr = foodData.docs.map((doc) => [doc.id, doc.data(), "food"]);
+      const arr = shopArr.concat(foodArr);
       arr.sort((a, b) => (a[1]["timestamp"] < b[1]["timestamp"] ? 1 : -1));
       setSearchHistory(arr);
     };
