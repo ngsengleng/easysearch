@@ -98,14 +98,8 @@ export default function Home() {
     const hyperlinks = {
       shopee: "https://easysearchserver.herokuapp.com/" + keyword + "/shopee",
       ezbuy: "https://easysearchserver.herokuapp.com/" + keyword + "/ezbuy",
-      qoo10:
-        "http://easysearchserver-env-3.eba-3pjbymty.ap-southeast-1.elasticbeanstalk.com/" +
-        keyword +
-        "/qoo10",
-      amazon:
-        "http://easysearchserver-env-3.eba-3pjbymty.ap-southeast-1.elasticbeanstalk.com/" +
-        keyword +
-        "/amazon",
+      qoo10: "https://dv4r9egjzlhdl.cloudfront.net/" + keyword + "/qoo10",
+      amazon: "https://dv4r9egjzlhdl.cloudfront.net/" + keyword + "/amazon",
     };
 
     await Promise.all(
