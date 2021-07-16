@@ -96,8 +96,8 @@ export default function Home() {
 
   const runSearchAPI = async (keyword, shop) => {
     const hyperlinks = {
-      shopee: "https://easysearchserver.herokuapp.com/" + keyword + "/shopee",
-      ezbuy: "https://easysearchserver.herokuapp.com/" + keyword + "/ezbuy",
+      shopee: "https://dv4r9egjzlhdl.cloudfront.net/" + keyword + "/shopee",
+      ezbuy: "https://dv4r9egjzlhdl.cloudfront.net/" + keyword + "/ezbuy",
       qoo10: "https://dv4r9egjzlhdl.cloudfront.net/" + keyword + "/qoo10",
       amazon: "https://dv4r9egjzlhdl.cloudfront.net/" + keyword + "/amazon",
     };
