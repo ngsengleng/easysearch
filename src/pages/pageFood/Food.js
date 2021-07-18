@@ -89,13 +89,9 @@ export default function Home() {
       });
   };
 
-  // https://easysearchserver.herokuapp.com/<insert keyword>/ezbuy
-  // https://easysearchserver.herokuapp.com/<insert keyword>/shopee
-  // https://easysearchcrawl.herokuapp.com/<insert keyword>/q100
-
   const runSearchAPI = async (keyword, shop) => {
     const hyperlinks = {
-      chope: "https://easysearchfoodchope.herokuapp.com/" + keyword + "/chope",
+      chope: "https://chope-ppo3nmsr4a-as.a.run.app/" + keyword + "/chope",
     };
 
     await Promise.all(
@@ -218,7 +214,7 @@ export default function Home() {
     return () => window.removeEventListener("resize", handleWindowResize);
   }, []);
   useEffect(() => {
-    if (disableSearch === true && value.length === { itemTotal }) {
+    if (disableSearch === true && value.length === itemTotal) {
       setDisableSearch(false);
     }
   }, [value, disableSearch]);
