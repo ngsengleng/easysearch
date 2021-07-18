@@ -241,7 +241,7 @@ export default function Home() {
             <TextField
               className={classes.searchBox}
               variant="outlined"
-              label="Search an item..."
+              label="Search for food, restaurants, locations..."
               size="small"
               value={value}
               onChange={onChange}
