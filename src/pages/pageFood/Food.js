@@ -14,7 +14,7 @@ import ResultsHeader from "../../components/ResultsHeader";
 import RenderResults from "../../components/RenderResults";
 
 const db = firebase.firestore();
-
+const itemTotal = 10;
 const useStyles = makeStyles((theme) => ({
   title: {
     justifyContent: "center",
@@ -218,7 +218,7 @@ export default function Home() {
     return () => window.removeEventListener("resize", handleWindowResize);
   }, []);
   useEffect(() => {
-    if (disableSearch === true && value.length >= 6) {
+    if (disableSearch === true && value.length === { itemTotal }) {
       setDisableSearch(false);
     }
   }, [value, disableSearch]);
@@ -267,11 +267,11 @@ export default function Home() {
       </form>
       {value.length === 0 ? null : width < breakpoint ? (
         <Typography variant="h5" className={classes.title}>
-          Showing {value.length} of 6 items
+          Showing {value.length} of {itemTotal} items
         </Typography>
       ) : (
         <Typography variant="h4" className={classes.title}>
-          Showing {value.length} of 6 items
+          Showing {value.length} of {itemTotal} items
         </Typography>
       )}
       <ResultsHeader
