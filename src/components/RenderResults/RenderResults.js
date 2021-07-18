@@ -13,7 +13,6 @@ import ExitToAppRoundedIcon from "@material-ui/icons/ExitToAppRounded";
 import "firebase/database";
 import "firebase/firestore";
 import { firebase } from "@firebase/app";
-import empty from "../../photos/empty.png";
 
 const db = firebase.firestore();
 
@@ -95,7 +94,6 @@ export default function RenderResults(props) {
 }
 
 function RenderLink(props) {
-  const [validImage, setValidImage] = useState(true);
   const classes = useStyles();
   const currentUser = firebase.auth().currentUser.uid;
 
@@ -158,16 +156,11 @@ function RenderLink(props) {
       <Grid item xs={width < lg ? false : 1}></Grid>
 
       <Grid item xs={2}>
-        {validImage ? (
-          <img
-            src={props.itemData.image}
-            onError={() => setValidImage(false)}
-            alt="product"
-            className={classes.image}
-          />
-        ) : (
-          <img src={empty} alt="product" className={classes.image} />
-        )}
+        <img
+          src={props.itemData.image}
+          alt="product"
+          className={classes.image}
+        />
       </Grid>
 
       <Grid item xs={width < lg ? 2 : 3}>
@@ -250,7 +243,6 @@ function RenderLink(props) {
 }
 
 function FoodRenderLink(props) {
-  const [validImage, setValidImage] = useState(true);
   const classes = useStyles();
 
   const openInNewTab = (url) => {
@@ -273,16 +265,11 @@ function FoodRenderLink(props) {
       <Grid item xs={width < lg ? false : 1}></Grid>
 
       <Grid item xs={2}>
-        {validImage ? (
-          <img
-            src={props.itemData.image}
-            onError={() => setValidImage(false)}
-            alt="product"
-            className={classes.image}
-          />
-        ) : (
-          <img src={empty} alt="product" className={classes.image} />
-        )}
+        <img
+          src={props.itemData.image}
+          alt="product"
+          className={classes.image}
+        />
       </Grid>
 
       <Grid item xs={width < lg ? 2 : 3}>

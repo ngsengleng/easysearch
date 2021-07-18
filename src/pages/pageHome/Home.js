@@ -15,6 +15,7 @@ import RenderResults from "../../components/RenderResults";
 import TrendingCarousel from "../../components/TrendingCarousel";
 
 const db = firebase.firestore();
+const itemTotal = 20;
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -220,7 +221,7 @@ export default function Home() {
     return () => window.removeEventListener("resize", handleWindowResize);
   }, []);
   useEffect(() => {
-    if (disableSearch === true && value.length === 12) {
+    if (disableSearch === true && value.length === itemTotal) {
       setDisableSearch(false);
     }
   }, [value, disableSearch]);
@@ -270,11 +271,11 @@ export default function Home() {
       </form>
       {value.length === 0 ? null : width < breakpoint ? (
         <Typography variant="h5" className={classes.title}>
-          Showing {value.length} of 12 items
+          Showing {value.length} of{itemTotal} items
         </Typography>
       ) : (
         <Typography variant="h4" className={classes.title}>
-          Showing {value.length} of 12 items
+          Showing {value.length} of {itemTotal} items
         </Typography>
       )}
       <ResultsHeader
