@@ -62,6 +62,7 @@ export default function Trending() {
         key += 1;
         return (
           <RenderResults
+            type={"shops"}
             key={key}
             itemData={entry[1]}
             bool={bool}
