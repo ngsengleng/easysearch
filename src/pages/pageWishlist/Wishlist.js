@@ -138,6 +138,7 @@ export default function Wishlist() {
         wishlist?.map((entry, idx) => {
           return (
             <RenderResults
+              type={"shops"}
               key={idx}
               itemData={entry}
               bool={bool}
