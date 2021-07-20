@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn({ testFn }) {
+export default function SignIn({ testFn = (data) => console.log("hi") }) {
   const classes = useStyles();
   const { handleSubmit, control } = useForm();
   const history = useHistory();
