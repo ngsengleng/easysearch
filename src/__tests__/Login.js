@@ -7,8 +7,9 @@ const email = "cronos.seymour@gmail.com";
 const password = "123456";
 
 describe("LoginForm", () => {
+  const mockSubmit = jest.fn();
   it("renders necessary fields", () => {
-    render(<Login />);
+    render(<Login testFn={mockSubmit} />);
 
     expect(
       screen.getByRole("heading", { name: "Sign in" })
@@ -43,5 +44,10 @@ describe("LoginForm", () => {
     });
 
     fireEvent.submit(screen.getByRole("button", { name: /Sign in/i }));
+
+    expect(mockSubmit).toHaveBeenCalledWith({
+      Email: email,
+      Password: password,
+    });
   });
 });
