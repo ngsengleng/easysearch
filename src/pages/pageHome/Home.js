@@ -99,7 +99,7 @@ export default function Home() {
     const hyperlinks = {
       shopee: "https://dv4r9egjzlhdl.cloudfront.net/" + keyword + "/shopee",
       ezbuy: "https://dv4r9egjzlhdl.cloudfront.net/" + keyword + "/ezbuy",
-      qoo10: "http://dvj51j3bpfwc.cloudfront.net/" + keyword + "/qoo10",
+      qoo10: "https://dcfuflc0fmvot.cloudfront.net/" + keyword + "/qoo10",
       amazon: "https://dv4r9egjzlhdl.cloudfront.net/" + keyword + "/amazon",
     };
 
