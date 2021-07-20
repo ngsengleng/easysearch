@@ -1,12 +1,13 @@
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import Login from "../pages/pageLogin";
 
 afterEach(cleanup);
 
+const email = "cronos.seymour@gmail.com";
+const password = "123456";
+
 describe("LoginForm", () => {
   it("renders necessary fields", () => {
-    const email = "cronos.seymour@gmail.com";
-    const password = "123456";
     render(<Login />);
 
     expect(
@@ -30,5 +31,17 @@ describe("LoginForm", () => {
     expect(
       screen.getByRole("link", { name: /Don't have/i })
     ).toBeInTheDocument();
+  });
+
+  it("should submit correct form data", () => {
+    fireEvent.input(screen.getByRole("textbox", { name: /Email Address/i }), {
+      target: { value: email },
+    });
+
+    fireEvent.input(screen.getByLabelText(/Password/i), {
+      target: { value: password },
+    });
+
+    fireEvent.submit(screen.getByRole("button", { name: /Sign in/i }));
   });
 });
