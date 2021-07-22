@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+export default function Signup({ test = (data) => null }) {
   const classes = useStyles();
 
   const { control, handleSubmit, watch } = useForm();
@@ -63,6 +63,7 @@ export default function SignIn() {
 
   // on successful signup create new document with user uid for search history
   const signUp = async (data) => {
+    test(data);
     await firebase
       .auth()
       .createUserWithEmailAndPassword(data.Email, data.Password)
@@ -105,6 +106,7 @@ export default function SignIn() {
                 fullWidth
                 label="Email Address"
                 autoComplete="email"
+                id="email"
                 autoFocus
                 value={value}
                 onChange={onChange}
@@ -125,6 +127,7 @@ export default function SignIn() {
                 fullWidth
                 type="password"
                 label="Password"
+                id="password"
                 value={value}
                 onChange={onChange}
                 error={!!error}
@@ -146,7 +149,8 @@ export default function SignIn() {
                 margin="normal"
                 fullWidth
                 type="password"
-                label="Retype password"
+                label="Retype"
+                id="retype"
                 value={value}
                 onChange={onChange}
                 error={!!error}

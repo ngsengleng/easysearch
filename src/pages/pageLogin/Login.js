@@ -48,12 +48,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn({ testFn = (data) => console.log("hi") }) {
+export default function SignIn({ test = (data) => null }) {
   const classes = useStyles();
   const { handleSubmit, control } = useForm();
   const history = useHistory();
-  const onSubmit = async (data) => {
-    testFn(data);
+  const onSubmit = (data) => {
+    test(data);
     firebase
       .auth()
       .signInWithEmailAndPassword(data.Email, data.Password)

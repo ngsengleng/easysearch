@@ -1,5 +1,16 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import Login from "../pages/pageLogin";
+import {
+  act,
+  waitFor,
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+} from "@testing-library/react";
+import { config } from "../../config/firebase";
+import firebase from "@firebase/app";
+import "@firebase/auth";
+
+import Login from "./Login";
 
 afterEach(cleanup);
 
@@ -35,7 +46,7 @@ describe("LoginForm", () => {
 
   it("should submit correct form data", async () => {
     const mockSubmit = jest.fn();
-    render(<Login testFn={mockSubmit} />);
+    await act(async () => render(<Login test={mockSubmit} />));
     fireEvent.input(screen.getByRole("textbox", { name: /Email Address/i }), {
       target: { value: email },
     });
@@ -44,11 +55,15 @@ describe("LoginForm", () => {
       target: { value: password },
     });
 
-    fireEvent.submit(screen.getByRole("button", { name: /Sign in/i }));
+    await act(async () =>
+      fireEvent.submit(screen.getByRole("button", { name: /Sign in/i }))
+    );
 
-    expect(mockSubmit).toHaveBeenCalledWith({
-      Email: email,
-      password: password,
-    });
+    await waitFor(() =>
+      expect(mockSubmit).toHaveBeenCalledWith({
+        Email: email,
+        Password: password,
+      })
+    );
   });
 });
