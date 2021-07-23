@@ -10,11 +10,10 @@ import {
 import AddBoxRoundedIcon from "@material-ui/icons/AddBoxRounded";
 import IndeterminateCheckBoxIcon from "@material-ui/icons/IndeterminateCheckBox";
 import ExitToAppRoundedIcon from "@material-ui/icons/ExitToAppRounded";
-import "firebase/database";
-import "firebase/firestore";
-import { firebase } from "@firebase/app";
 
-const db = firebase.firestore();
+import { db } from "../../config/firebase";
+import firebase from "firebase/app";
+import { useAuth } from "../../context/AuthContext";
 
 const useStyles = makeStyles((theme) => ({
   displayGrid: {
@@ -38,8 +37,8 @@ const useStyles = makeStyles((theme) => ({
 // receive an array of items in format [storeName, itemDetails]
 export default function RenderResults(props) {
   const classes = useStyles();
-  const currentUser = firebase.auth().currentUser.uid;
-  const a = db.collection("users").doc(currentUser).collection("wishlist");
+  const { currentUser } = useAuth();
+  const a = db.collection("users").doc(currentUser.uid).collection("wishlist");
   const [disableButton, setDisableButton] = useState();
   const num = 0;
   const url =
@@ -95,9 +94,9 @@ export default function RenderResults(props) {
 
 function RenderLink(props) {
   const classes = useStyles();
-  const currentUser = firebase.auth().currentUser.uid;
+  const { currentUser } = useAuth();
 
-  const a = db.collection("users").doc(currentUser).collection("wishlist");
+  const a = db.collection("users").doc(currentUser.uid).collection("wishlist");
   const openInNewTab = (url) => {
     const newWindow = window.open(url, "_blank", "noopener,noreferrer");
     if (newWindow) newWindow.opener = null;

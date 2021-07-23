@@ -4,16 +4,15 @@ import { Button, TextField } from "@material-ui/core";
 import { useForm, Controller } from "react-hook-form";
 import { useLocation } from "react-router";
 
-import "firebase/database";
-import "firebase/firestore";
 import { firebase } from "@firebase/app";
-
 import { Typography, makeStyles } from "@material-ui/core";
+
+import { db } from "../../config/firebase";
 
 import ResultsHeader from "../../components/ResultsHeader";
 import RenderResults from "../../components/RenderResults";
+import { useAuth } from "../../context/AuthContext";
 
-const db = firebase.firestore();
 const itemTotal = 10;
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -46,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Home() {
   const classes = useStyles();
   const location = useLocation();
-
+  const { currentUser } = useAuth();
   const [width, setWidth] = useState(window.innerWidth);
   const breakpoint = 500;
 
@@ -69,25 +68,27 @@ export default function Home() {
 
   // submits user search history keyword to firestore
   // name of product is saved as the document name
-  const updateHistory = (keyword) => {
-    const currentUser = firebase.auth().currentUser.uid;
-    var searchHistory = db
-      .collection("users")
-      .doc(currentUser)
-      .collection("foodSearchHistory")
-      .doc(keyword);
-    searchHistory
-      .set(
-        {
-          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        },
-        { merge: true }
-      )
-      .then(() => console.log("successfully updated database"))
-      .catch((error) => {
-        console.error("Error updating document: ", error);
-      });
-  };
+  const updateHistory = useCallback(
+    (keyword) => {
+      var searchHistory = db
+        .collection("users")
+        .doc(currentUser.uid)
+        .collection("foodSearchHistory")
+        .doc(keyword);
+      searchHistory
+        .set(
+          {
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          },
+          { merge: true }
+        )
+        .then(() => console.log("successfully updated database"))
+        .catch((error) => {
+          console.error("Error updating document: ", error);
+        });
+    },
+    [currentUser]
+  );
 
   const runSearchAPI = async (keyword, shop) => {
     const hyperlinks = {
@@ -156,46 +157,49 @@ export default function Home() {
 
   // gets data from firebase realtime database
   // on successful return will save search keyword under user
-  const fetchData = useCallback((data) => {
-    // shops in circulation
-    const shops = ["chope"];
-    // update search history even if no results
-    updateHistory(data.searchValue.toLowerCase());
-    const dbRef = firebase
-      .database()
-      .ref("/easysearchfoodvoucher/" + data.searchValue.toLowerCase());
-    // function to get all the values
-    // await all of them
-    // process the data when they are all here
-    let isRetrieving = false;
-    dbRef.on("value", (snapshot) => {
-      if (snapshot.exists()) {
-        const dataArr = [];
-        let leftoverShops = [];
-        const availableShops = [];
-        snapshot.forEach((entry) => {
-          availableShops.push(entry.key);
-          entry.val().forEach((x) => {
-            const newF = { item: data.searchValue.toLowerCase() };
-            const y = { ...x, ...newF };
-            dataArr.push([entry.key, y]);
+  const fetchData = useCallback(
+    (data) => {
+      // shops in circulation
+      const shops = ["chope"];
+      // update search history even if no results
+      updateHistory(data.searchValue.toLowerCase());
+      const dbRef = firebase
+        .database()
+        .ref("/easysearchfoodvoucher/" + data.searchValue.toLowerCase());
+      // function to get all the values
+      // await all of them
+      // process the data when they are all here
+      let isRetrieving = false;
+      dbRef.on("value", (snapshot) => {
+        if (snapshot.exists()) {
+          const dataArr = [];
+          let leftoverShops = [];
+          const availableShops = [];
+          snapshot.forEach((entry) => {
+            availableShops.push(entry.key);
+            entry.val().forEach((x) => {
+              const newF = { item: data.searchValue.toLowerCase() };
+              const y = { ...x, ...newF };
+              dataArr.push([entry.key, y]);
+            });
           });
-        });
-        leftoverShops = shops.filter(
-          (item) => !availableShops.some((item2) => item === item2)
-        );
-        if (leftoverShops.length !== 0 && !isRetrieving) {
+          leftoverShops = shops.filter(
+            (item) => !availableShops.some((item2) => item === item2)
+          );
+          if (leftoverShops.length !== 0 && !isRetrieving) {
+            isRetrieving = true;
+            runSearchAPI(data.searchValue, leftoverShops);
+          }
+          setValue(dataArr);
+          setBool(true);
+        } else {
+          runSearchAPI(data.searchValue, shops);
           isRetrieving = true;
-          runSearchAPI(data.searchValue, leftoverShops);
         }
-        setValue(dataArr);
-        setBool(true);
-      } else {
-        runSearchAPI(data.searchValue, shops);
-        isRetrieving = true;
-      }
-    });
-  }, []);
+      });
+    },
+    [updateHistory]
+  );
   useEffect(() => {
     if (location.state !== undefined) {
       fetchData({ searchValue: location.state.keyword });
