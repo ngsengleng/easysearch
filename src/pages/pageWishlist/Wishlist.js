@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
 import RenderResults from "../../components/RenderResults";
-import "firebase/database";
-import "firebase/firestore";
-import { firebase } from "@firebase/app";
 import { Typography, makeStyles, Link, Button, Box } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import GeneralHeader from "../../components/GeneralHeader";
-
-const db = firebase.firestore();
-
+import { db } from "../../config/firebase";
+import { useAuth } from "../../context/AuthContext";
 const useStyles = makeStyles({
   pageHeader: {
     margin: "30px",
@@ -32,6 +28,7 @@ export default function Wishlist() {
   const [bool, setBool] = useState();
   const [subscribed, setSubscribed] = useState(false);
   const goToHome = () => history.push("/");
+  const { currentUser } = useAuth();
   // fetch data from firestore on page render
   useEffect(() => {
     document.title = "Wishlist";
@@ -39,16 +36,15 @@ export default function Wishlist() {
     let unsub = "";
 
     const fetchWishlist = async () => {
-      const currentUser = firebase.auth().currentUser.uid;
-      const mailingList = await db.collection("users").doc(currentUser);
+      const mailingList = db.collection("users").doc(currentUser.uid);
       unsub = mailingList.onSnapshot((doc) => {
         if (doc.exists) {
           setSubscribed(doc.data()["mailing_list"]);
         }
       });
-      const data = await db
+      const data = db
         .collection("users")
-        .doc(currentUser)
+        .doc(currentUser.uid)
         .collection("wishlist")
         .doc("arrayOfItems");
       unsubscribe = data.onSnapshot((doc) => {
@@ -65,11 +61,10 @@ export default function Wishlist() {
       unsubscribe();
       unsub();
     };
-  }, []);
+  }, [currentUser]);
   const subscribeToWishlist = async () => {
-    const currentUser = firebase.auth().currentUser.uid;
     setSubscribed(true);
-    db.collection("users").doc(currentUser).set(
+    db.collection("users").doc(currentUser.uid).set(
       {
         mailing_list: true,
       },
@@ -77,9 +72,8 @@ export default function Wishlist() {
     );
   };
   const unsubscribeFromWishlist = async () => {
-    const currentUser = firebase.auth().currentUser.uid;
     setSubscribed(false);
-    db.collection("users").doc(currentUser).set(
+    db.collection("users").doc(currentUser.uid).set(
       {
         mailing_list: false,
       },

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-import "firebase/database";
-import "firebase/firestore";
-import { firebase } from "@firebase/app";
+
 import RenderHistory from "../../components/RenderHistory";
 import { Typography, makeStyles, Paper, Divider } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
-const db = firebase.firestore();
+import { db } from "../../config/firebase";
+import { useAuth } from "../../context/AuthContext";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -30,6 +29,7 @@ export default function History() {
   const itemsPerPage = 10;
   const [width, setWidth] = useState(window.innerWidth);
   const breakpoint = 750;
+  const { currentUser } = useAuth();
   useEffect(() => {
     // correct way to set title is with react-helmet (its a library, go look it up)
     document.title = "History";
@@ -37,15 +37,14 @@ export default function History() {
     window.addEventListener("resize", handleWindowResize);
 
     const fetchSearchHistory = async () => {
-      const currentUser = firebase.auth().currentUser.uid;
       const allData = await db
         .collection("users")
-        .doc(currentUser)
+        .doc(currentUser.uid)
         .collection("searchHistory")
         .get();
       const foodData = await db
         .collection("users")
-        .doc(currentUser)
+        .doc(currentUser.uid)
         .collection("foodSearchHistory")
         .get();
       const shopArr = allData.docs.map((doc) => [doc.id, doc.data(), "shop"]);
@@ -57,7 +56,7 @@ export default function History() {
 
     fetchSearchHistory();
     return () => window.removeEventListener("resize", handleWindowResize);
-  }, []);
+  }, [currentUser]);
 
   const handleChange = (e, value) => {
     setCurrentPage(value);

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Typography, Divider, makeStyles } from "@material-ui/core";
+import { firebase } from "@firebase/app";
+
 import RenderResults from "../../components/RenderResults";
 import TrendingCarousel from "../../components/TrendingCarousel";
 import GeneralHeader from "../../components/GeneralHeader";
-
-import "firebase/database";
-import { firebase } from "@firebase/app";
 
 const useStyles = makeStyles({
   title: {
@@ -20,6 +19,7 @@ export default function Trending() {
   const [bool, setBool] = useState(false);
   let key = 0;
   useEffect(() => {
+    document.title = "Trending";
     window.scrollTo(0, 0);
     if (location.keyword !== undefined) {
       const dbRef = firebase.database().ref("/trending/" + location.keyword);
