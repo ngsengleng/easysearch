@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 
 import RenderHistory from "../../components/RenderHistory";
-import { Typography, makeStyles, Paper, Divider } from "@material-ui/core";
+import {
+  Typography,
+  makeStyles,
+  Paper,
+  Divider,
+  Button,
+  Box,
+} from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
 import { db } from "../../config/firebase";
 import { useAuth } from "../../context/AuthContext";
@@ -21,6 +28,16 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     marginTop: "50px",
   },
+
+  buttonBox: {
+    margin: "30px",
+    textAlign: "center",
+    marginTop: "10px",
+  },
+  button: {
+    backgroundColor: "#f44336",
+    color: "#ffebee",
+  },
 }));
 export default function History() {
   const classes = useStyles();
@@ -30,6 +47,9 @@ export default function History() {
   const [width, setWidth] = useState(window.innerWidth);
   const breakpoint = 750;
   const { currentUser } = useAuth();
+  const [toBeDeleted, setToBeDeleted] = useState([]);
+  const [isDeletingItems, setIsDeletingItems] = useState(false);
+
   useEffect(() => {
     // correct way to set title is with react-helmet (its a library, go look it up)
     document.title = "History";
@@ -62,6 +82,23 @@ export default function History() {
     setCurrentPage(value);
   };
 
+  const addToDelete = (item, type) => {
+    setToBeDeleted([...toBeDeleted, [item, type]]);
+  };
+
+  const removeFromDelete = (item, type) => {
+    const newDelete = toBeDeleted.filter((x) =>
+      x[0] !== item ? true : x[1] !== type
+    );
+    setToBeDeleted(newDelete);
+  };
+
+  const resetDelete = () => {
+    setIsDeletingItems(false);
+    setToBeDeleted([]);
+  };
+
+  console.log(toBeDeleted);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = searchHistory.slice(indexOfFirstItem, indexOfLastItem);
@@ -87,13 +124,43 @@ export default function History() {
         )}
 
         <Divider />
-        <RenderHistory items={currentItems} />
+        <RenderHistory
+          items={currentItems}
+          isDeletingItems={isDeletingItems}
+          addToDelete={addToDelete}
+          removeFromDelete={removeFromDelete}
+        />
         <Pagination
           onChange={handleChange}
           count={Math.ceil(searchHistory.length / itemsPerPage)}
           defaultPage={1}
         />
       </Paper>
+      <Box className={classes.buttonBox}>
+        {isDeletingItems ? (
+          <>
+            <Button
+              color="primary"
+              variant="outlined"
+              onClick={() => resetDelete()}
+            >
+              stop deleting
+            </Button>
+            <Button color="primary" variant="outlined">
+              delete all
+            </Button>
+          </>
+        ) : (
+          <Button
+            color="inherit"
+            variant="contained"
+            onClick={() => setIsDeletingItems(!isDeletingItems)}
+            className={classes.button}
+          >
+            delete search history
+          </Button>
+        )}
+      </Box>
     </div>
   );
 }
