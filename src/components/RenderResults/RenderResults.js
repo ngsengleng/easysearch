@@ -38,8 +38,8 @@ const useStyles = makeStyles((theme) => ({
 export default function RenderResults(props) {
   const classes = useStyles();
   const { currentUser } = useAuth();
-  const a = db.collection("users").doc(currentUser.uid).collection("wishlist");
-  const [disableButton, setDisableButton] = useState();
+
+  const [disableButton, setDisableButton] = useState(false);
   const num = 0;
   const url =
     props.itemData?.url === "Nil"
@@ -49,17 +49,28 @@ export default function RenderResults(props) {
       ? props.itemData?.url
       : "https://" + props.itemData?.url;
 
-  // find out how to set the disableButton state back to false if no results present
+  // logic to fix add and remove item from wishlist button
   useEffect(() => {
-    const newField = { store: props.store };
-    const newItemData = { ...props.itemData, ...newField };
-
-    a.where("items", "array-contains", newItemData).onSnapshot((snapshot) => {
-      snapshot.forEach((userSnapshot) => {
-        setDisableButton(true);
+    setDisableButton(false);
+    const compareItemData = (a, b) => {
+      return a.title === b.title;
+    };
+    db.collection("users")
+      .doc(currentUser.uid)
+      .collection("wishlist")
+      .doc("arrayOfItems")
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          const newField = { store: props.store };
+          const newItemData = { ...props.itemData, ...newField };
+          const arr = doc.data()["items"];
+          if (arr.filter((x) => compareItemData(x, newItemData)).length !== 0) {
+            setDisableButton(true);
+          }
+        }
       });
-    });
-  }, [a, props.itemData, props.store]);
+  }, [props.itemData, currentUser, props.store]);
 
   if (props.bool) {
     return (
