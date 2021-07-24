@@ -24,9 +24,15 @@ yarn-error.log*
 
 #config files for firebase
 /config
+<<<<<<< HEAD
 database-debug.log
 .gitignore
 firebase-debug.log
 
 firestore-debug.log
+=======
+firebase-debug.log
+firestore-debug.log
+database-debug.log
+>>>>>>> master
 ui-debug.log
