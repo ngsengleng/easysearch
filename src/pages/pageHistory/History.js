@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 import RenderHistory from "../../components/RenderHistory";
 import {
@@ -30,13 +30,18 @@ const useStyles = makeStyles((theme) => ({
   },
 
   buttonBox: {
-    margin: "30px",
+    margin: "50px",
     textAlign: "center",
     marginTop: "10px",
   },
   button: {
     backgroundColor: "#f44336",
     color: "#ffebee",
+    margin: "20px",
+  },
+
+  button2: {
+    margin: "20px",
   },
 }));
 export default function History() {
@@ -50,33 +55,32 @@ export default function History() {
   const [toBeDeleted, setToBeDeleted] = useState([]);
   const [isDeletingItems, setIsDeletingItems] = useState(false);
 
+  const fetchSearchHistory = useCallback(async () => {
+    const allData = await db
+      .collection("users")
+      .doc(currentUser.uid)
+      .collection("searchHistory")
+      .get();
+    const foodData = await db
+      .collection("users")
+      .doc(currentUser.uid)
+      .collection("foodSearchHistory")
+      .get();
+    const shopArr = allData.docs.map((doc) => [doc.id, doc.data(), "shop"]);
+    const foodArr = foodData.docs.map((doc) => [doc.id, doc.data(), "food"]);
+    const arr = shopArr.concat(foodArr);
+    arr.sort((a, b) => (a[1]["timestamp"] < b[1]["timestamp"] ? 1 : -1));
+    setSearchHistory(arr);
+  }, [currentUser]);
+
   useEffect(() => {
-    // correct way to set title is with react-helmet (its a library, go look it up)
     document.title = "History";
     const handleWindowResize = () => setWidth(window.innerWidth);
     window.addEventListener("resize", handleWindowResize);
-
-    const fetchSearchHistory = async () => {
-      const allData = await db
-        .collection("users")
-        .doc(currentUser.uid)
-        .collection("searchHistory")
-        .get();
-      const foodData = await db
-        .collection("users")
-        .doc(currentUser.uid)
-        .collection("foodSearchHistory")
-        .get();
-      const shopArr = allData.docs.map((doc) => [doc.id, doc.data(), "shop"]);
-      const foodArr = foodData.docs.map((doc) => [doc.id, doc.data(), "food"]);
-      const arr = shopArr.concat(foodArr);
-      arr.sort((a, b) => (a[1]["timestamp"] < b[1]["timestamp"] ? 1 : -1));
-      setSearchHistory(arr);
-    };
-
     fetchSearchHistory();
+
     return () => window.removeEventListener("resize", handleWindowResize);
-  }, [currentUser]);
+  }, [fetchSearchHistory]);
 
   const handleChange = (e, value) => {
     setCurrentPage(value);
@@ -98,7 +102,36 @@ export default function History() {
     setToBeDeleted([]);
   };
 
-  console.log(toBeDeleted);
+  const deleteSelectedItems = (type) => {
+    const searchHistory = db
+      .collection("users")
+      .doc(currentUser.uid)
+      .collection("searchHistory");
+
+    const foodSearchHistory = db
+      .collection("users")
+      .doc(currentUser.uid)
+      .collection("foodSearchHistory");
+
+    if (type === "some") {
+      Promise.all(
+        toBeDeleted.map(async (x) => {
+          if (x[1] === "shop") {
+            return searchHistory.doc(x[0]).delete();
+          } else if (x[1] === "food") {
+            return foodSearchHistory.doc(x[0]).delete();
+          }
+        })
+      )
+        .then(() => {
+          fetchSearchHistory();
+        })
+        .catch((error) => console.error("Error removing document: ", error));
+
+      setToBeDeleted([]);
+    } else if (type === "all") {
+    }
+  };
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = searchHistory.slice(indexOfFirstItem, indexOfLastItem);
@@ -129,6 +162,7 @@ export default function History() {
           isDeletingItems={isDeletingItems}
           addToDelete={addToDelete}
           removeFromDelete={removeFromDelete}
+          toBeDeleted={toBeDeleted}
         />
         <Pagination
           onChange={handleChange}
@@ -142,12 +176,25 @@ export default function History() {
             <Button
               color="primary"
               variant="outlined"
+              className={classes.button2}
               onClick={() => resetDelete()}
             >
               stop deleting
             </Button>
-            <Button color="primary" variant="outlined">
-              delete all
+            <Button
+              color="primary"
+              variant="outlined"
+              className={classes.button}
+              onClick={() => deleteSelectedItems("some")}
+            >
+              delete selected
+            </Button>
+            <Button
+              color="primary"
+              variant="outlined"
+              className={classes.button}
+            >
+              delete everything
             </Button>
           </>
         ) : (

@@ -50,7 +50,7 @@ export default function Home() {
   const breakpoint = 500;
 
   // key for helping react keep track of map variables
-  var key = 0;
+  let key = 0;
   const { control, handleSubmit } = useForm();
   const [value, setValue] = useState([]);
   const [bool, setBool] = useState(false);
@@ -70,7 +70,7 @@ export default function Home() {
   // name of product is saved as the document name
   const updateHistory = useCallback(
     (keyword) => {
-      var searchHistory = db
+      let searchHistory = db
         .collection("users")
         .doc(currentUser.uid)
         .collection("foodSearchHistory")

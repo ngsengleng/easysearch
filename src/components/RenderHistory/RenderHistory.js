@@ -9,9 +9,9 @@ import {
   Checkbox,
 } from "@material-ui/core";
 import LinkIcon from "@material-ui/icons/Link";
-
 import { useHistory } from "react-router-dom";
 import moment from "moment";
+
 const useStyles = makeStyles((theme) => ({
   list: {
     [theme.breakpoints.down("xs")]: {
@@ -29,9 +29,36 @@ export default function RenderHistory({
   isDeletingItems,
   addToDelete,
   removeFromDelete,
+  toBeDeleted,
 }) {
   const classes = useStyles();
+
+  return (
+    <List className={classes.list}>
+      {items.map((item, i) => (
+        <HistoryElement
+          key={i}
+          item={item}
+          isDeletingItems={isDeletingItems}
+          addToDelete={addToDelete}
+          removeFromDelete={removeFromDelete}
+          toBeDeleted={toBeDeleted}
+        />
+      ))}
+    </List>
+  );
+}
+
+function HistoryElement({
+  item,
+  isDeletingItems,
+  addToDelete,
+  removeFromDelete,
+  toBeDeleted,
+}) {
+  const [checked, setChecked] = useState(false);
   const history = useHistory();
+
   const redirectToResults = (keyword, type) => {
     if (type === "shop") {
       history.push({
@@ -46,37 +73,15 @@ export default function RenderHistory({
     }
   };
 
-  return (
-    <List className={classes.list}>
-      {items.map((item, i) => (
-        <HistoryElement
-          key={i}
-          item={item}
-          isDeletingItems={isDeletingItems}
-          redirectToResults={redirectToResults}
-          addToDelete={addToDelete}
-          removeFromDelete={removeFromDelete}
-        />
-      ))}
-    </List>
-  );
-}
-
-function HistoryElement({
-  item,
-  isDeletingItems,
-  redirectToResults,
-  addToDelete,
-  removeFromDelete,
-}) {
-  const [checked, setChecked] = useState(false);
-
   useEffect(() => {
     if (!isDeletingItems) {
       setChecked(false);
     }
     setChecked(false);
-  }, [isDeletingItems, item]);
+    if (toBeDeleted.filter((x) => x[0] === item[0]).length !== 0) {
+      setChecked(true);
+    }
+  }, [isDeletingItems, item, toBeDeleted]);
 
   const handleCheck = (item, type) => {
     if (checked) {

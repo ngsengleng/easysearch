@@ -69,7 +69,7 @@ export default function SignIn() {
         history.push("/");
       })
       .catch((error) => {
-        var errorCode = error.code;
+        let errorCode = error.code;
         if (errorCode === "auth/invalid-email") {
           alert("This is not a valid email.");
           history.push("/signup");
