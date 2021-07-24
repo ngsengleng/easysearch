@@ -6,20 +6,23 @@ import {
   render,
   screen,
 } from "@testing-library/react";
-import { config } from "../../config/firebase";
-import firebase from "@firebase/app";
-import "@firebase/auth";
 
 import Login from "./Login";
-
+import { AuthProvider, useAuth } from "../../context/AuthContext";
 afterEach(cleanup);
 
 const email = "cronos.seymour@gmail.com";
-const password = "123456";
+const password = "111111";
 
 describe("LoginForm", () => {
-  it("renders necessary fields", () => {
-    render(<Login />);
+  it("renders necessary fields", async () => {
+    await act(async () =>
+      render(
+        <AuthProvider>
+          <Login />
+        </AuthProvider>
+      )
+    );
 
     expect(
       screen.getByRole("heading", { name: "Sign in" })
@@ -45,8 +48,13 @@ describe("LoginForm", () => {
   });
 
   it("should submit correct form data", async () => {
-    const mockSubmit = jest.fn();
-    await act(async () => render(<Login test={mockSubmit} />));
+    const mockLogin = jest.fn();
+
+    render(
+      <AuthProvider>
+        <Login testFn={mockLogin} />
+      </AuthProvider>
+    );
     fireEvent.input(screen.getByRole("textbox", { name: /Email Address/i }), {
       target: { value: email },
     });
@@ -54,16 +62,12 @@ describe("LoginForm", () => {
     fireEvent.input(screen.getByLabelText(/Password/i), {
       target: { value: password },
     });
-
-    await act(async () =>
-      fireEvent.submit(screen.getByRole("button", { name: /Sign in/i }))
-    );
+    await act(async () => {
+      fireEvent.submit(screen.getByRole("button", { name: /Sign in/i }));
+    });
 
     await waitFor(() =>
-      expect(mockSubmit).toHaveBeenCalledWith({
-        Email: email,
-        Password: password,
-      })
+      expect(mockLogin).toHaveBeenCalledWith(email, password)
     );
   });
 });
