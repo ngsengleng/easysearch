@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+export default function Login() {
   const classes = useStyles();
   const { handleSubmit, control } = useForm();
   const history = useHistory();
