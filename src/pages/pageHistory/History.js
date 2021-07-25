@@ -124,6 +124,7 @@ export default function History() {
     )
       .then(() => {
         fetchSearchHistory();
+        alert("history deleted!");
       })
       .catch((error) => console.error("Error removing document: ", error));
 
