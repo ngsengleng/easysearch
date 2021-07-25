@@ -102,7 +102,7 @@ export default function History() {
     setToBeDeleted([]);
   };
 
-  const deleteSelectedItems = (type) => {
+  const deleteSelectedItems = () => {
     const searchHistory = db
       .collection("users")
       .doc(currentUser.uid)
@@ -113,24 +113,21 @@ export default function History() {
       .doc(currentUser.uid)
       .collection("foodSearchHistory");
 
-    if (type === "some") {
-      Promise.all(
-        toBeDeleted.map(async (x) => {
-          if (x[1] === "shop") {
-            return searchHistory.doc(x[0]).delete();
-          } else if (x[1] === "food") {
-            return foodSearchHistory.doc(x[0]).delete();
-          }
-        })
-      )
-        .then(() => {
-          fetchSearchHistory();
-        })
-        .catch((error) => console.error("Error removing document: ", error));
+    Promise.all(
+      toBeDeleted.map(async (x) => {
+        if (x[1] === "shop") {
+          return searchHistory.doc(x[0]).delete();
+        } else if (x[1] === "food") {
+          return foodSearchHistory.doc(x[0]).delete();
+        }
+      })
+    )
+      .then(() => {
+        fetchSearchHistory();
+      })
+      .catch((error) => console.error("Error removing document: ", error));
 
-      setToBeDeleted([]);
-    } else if (type === "all") {
-    }
+    setToBeDeleted([]);
   };
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -185,16 +182,9 @@ export default function History() {
               color="primary"
               variant="outlined"
               className={classes.button}
-              onClick={() => deleteSelectedItems("some")}
+              onClick={() => deleteSelectedItems()}
             >
               delete selected
-            </Button>
-            <Button
-              color="primary"
-              variant="outlined"
-              className={classes.button}
-            >
-              delete everything
             </Button>
           </>
         ) : (
