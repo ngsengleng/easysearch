@@ -98,7 +98,6 @@ export default function History() {
     setToBeDeleted([]);
   };
 
-  console.log(toBeDeleted);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = searchHistory.slice(indexOfFirstItem, indexOfLastItem);

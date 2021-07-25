@@ -1,0 +1,134 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div>
+  <div
+    className="MuiBox-root MuiBox-root-3 makeStyles-pageHeader-1"
+  >
+    <h3
+      className="MuiTypography-root makeStyles-pageHeader-1 MuiTypography-h3 MuiTypography-gutterBottom MuiTypography-displayBlock"
+    >
+      Wishlist
+    </h3>
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-colorInherit"
+      disabled={false}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+      type="button"
+    >
+      <span
+        className="MuiButton-label"
+      >
+        Subcribe to notifications now!
+      </span>
+    </button>
+  </div>
+  <div>
+    <div
+      className="MuiGrid-root makeStyles-resultHeader-6 MuiGrid-container"
+    >
+      <div
+        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1"
+      />
+      <div
+        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-2"
+      >
+        <span
+          className="MuiTypography-root MuiTypography-button MuiTypography-gutterBottom MuiTypography-displayBlock"
+        >
+          IMAGE
+        </span>
+      </div>
+      <div
+        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-3"
+      >
+        <span
+          className="MuiTypography-root MuiTypography-button MuiTypography-gutterBottom MuiTypography-displayBlock"
+        >
+          ITEM NAME
+        </span>
+      </div>
+      <div
+        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1"
+      >
+        <span
+          className="MuiTypography-root MuiTypography-button MuiTypography-gutterBottom MuiTypography-displayBlock"
+        >
+          price
+        </span>
+      </div>
+      <div
+        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1"
+      >
+        <span
+          className="MuiTypography-root MuiTypography-button MuiTypography-gutterBottom MuiTypography-displayBlock"
+        >
+          store
+        </span>
+      </div>
+      <div
+        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1"
+      >
+        <span
+          className="MuiTypography-root MuiTypography-button MuiTypography-gutterBottom MuiTypography-displayBlock"
+        >
+          RATING
+        </span>
+      </div>
+      <div
+        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1"
+      >
+        <span
+          className="MuiTypography-root MuiTypography-button MuiTypography-gutterBottom MuiTypography-displayBlock"
+        >
+          WISHLIST
+        </span>
+      </div>
+      <div
+        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1"
+      >
+        <span
+          className="MuiTypography-root MuiTypography-button MuiTypography-gutterBottom MuiTypography-displayBlock"
+        >
+          link to site
+        </span>
+      </div>
+    </div>
+    <hr
+      className="MuiDivider-root makeStyles-divider-5"
+    />
+  </div>
+  <div>
+    <h5
+      className="MuiTypography-root makeStyles-pageHeader-1 MuiTypography-h5 MuiTypography-gutterBottom MuiTypography-displayBlock"
+    >
+      Your wishlist is empty
+    </h5>
+    <h6
+      className="MuiTypography-root makeStyles-homeLink-2 MuiTypography-subtitle1"
+    >
+      <a
+        className="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+        href="/"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+      >
+        Search for some items now!
+      </a>
+    </h6>
+  </div>
+</div>
+`;
