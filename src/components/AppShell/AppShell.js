@@ -67,7 +67,10 @@ function AppShell() {
                 <IconButton color="inherit" onClick={() => history.push("/")}>
                   <HomeIcon />
                 </IconButton>
-                <IconButton color="inherit" onClick={() => history.push("/")}>
+                <IconButton
+                  color="inherit"
+                  onClick={() => history.push("/food")}
+                >
                   <FastfoodIcon />
                 </IconButton>
                 <IconButton
