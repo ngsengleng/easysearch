@@ -33,7 +33,7 @@ const useStyles = makeStyles({
 });
 const lg = 1000;
 const sm = 750;
-const xs = 400;
+const xs = 450;
 export default function ResultsHeader({ sortConfig, sortResults, type }) {
   const classes = useStyles();
 

@@ -100,7 +100,7 @@ export default function Home() {
     const hyperlinks = {
       shopee: "https://dv4r9egjzlhdl.cloudfront.net/" + keyword + "/shopee",
       ezbuy: "https://dv4r9egjzlhdl.cloudfront.net/" + keyword + "/ezbuy",
-      qoo10: "https://dcfuflc0fmvot.cloudfront.net/" + keyword + "/qoo10",
+      qoo10: "https://d1dbxh532r3kd3.cloudfront.net/" + keyword + "/qoo10",
       amazon: "https://dv4r9egjzlhdl.cloudfront.net/" + keyword + "/amazon",
     };
 
@@ -277,7 +277,7 @@ export default function Home() {
       </form>
       {value.length === 0 ? null : width < breakpoint ? (
         <Typography variant="h5" className={classes.title}>
-          Showing {value.length} of{itemTotal} items
+          Showing {value.length} of {itemTotal} items
         </Typography>
       ) : (
         <Typography variant="h4" className={classes.title}>
