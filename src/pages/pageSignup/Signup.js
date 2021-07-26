@@ -132,7 +132,10 @@ export default function SignIn() {
             )}
             rules={{
               required: { value: true, message: "Password required" },
-              minLength: { value: 6, message: "Password is too short" },
+              minLength: {
+                value: 6,
+                message: "Password must be at least 6 characters",
+              },
             }}
           />
           <Controller
