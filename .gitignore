@@ -23,9 +23,9 @@ yarn-debug.log*
 yarn-error.log*
 
 #config files for firebase
-/config
 firebase-debug.log
 firestore-debug.log
 database-debug.log
 ui-debug.log
 .github/workflows/github-actions-for-testproject.yml
+src/config/firebase.js
